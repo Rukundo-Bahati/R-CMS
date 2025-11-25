@@ -1,0 +1,109 @@
+id: string;
+  name: string;
+  email: string;
+  phone: string;
+  department: string;
+  joinDate: string;
+  status: "active" | "inactive";
+  class: string;
+}
+=======
+
+interface Member {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  department: string;
+  joinDate: string;
+  status: "active" | "inactive";
+  class: string;
+}
+
+// Utility function to check if a string is an email
+const isEmail = (value: string): boolean => {
+  return /\S+@\S+\.\S+/.test(value);
+};
+// Utility function to check if a string is a phone number (basic pattern)
+const isPhone = (value: string): boolean => {
+  return /^\+?\d{7,15}$/.test(value.replace(/\s+/g, ""));
+};
+// Utility to check if string looks like a date (YYYY-MM-DD)
+const isDate = (value: string): boolean => {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+};
+// Utility to check if string looks like a class/intake year (4-digit)
+const isClass = (value: string): boolean => {
+  return /^\d{4}$/.test(value);
+};
+
+// Sanitize member object to correct misplaced fields
+const sanitizeMember = (member: Member): Member => {
+  let correctedMember = { ...member };
+
+  // If email field contains multiple lines or a value not an email, attempt to fix fields
+  let emailVal = correctedMember.email.trim();
+
+  // Detect common cases separated by newlines or spaces, split into parts
+  const parts = emailVal.split(/\s|\n/).filter(Boolean);
+
+  if (parts.length > 1) {
+    parts.forEach((part) => {
+      if (isEmail(part)) correctedMember.email = part;
+      else if (isPhone(part)) correctedMember.phone = part;
+      else if (isDate(part)) correctedMember.joinDate = part;
+      else if (isClass(part)) correctedMember.class = part;
+    });
+  } else {
+    // For single value in emailVal, check if misplaced
+    if (!isEmail(emailVal)) {
+      // Move value to correct property
+      if (isPhone(emailVal)) {
+        correctedMember.phone = emailVal;
+        correctedMember.email = "";
+      } else if (isDate(emailVal)) {
+        correctedMember.joinDate = emailVal;
+        correctedMember.email = "";
+      } else if (isClass(emailVal)) {
+        correctedMember.class = emailVal;
+        correctedMember.email = "";
+      }
+    }
+  }
+
+  return correctedMember;
+};
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+export default function Members() {
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [members, setMembers] = useState(mockMembers);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const filteredMembers = members.filter(
+    (member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.department.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+=======
+export default function Members() {
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [members, setMembers] = useState<Member[]>([]);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+
+  // On mount, sanitize members data and set state
+  useEffect(() => {
+    const sanitized = mockMembers.map((m) => sanitizeMember(m));
+    setMembers(sanitized);
+  }, []);
+
+  const filteredMembers = members.filter(
+    (member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.department.toLowerCase().includes(searchTerm.toLowerCase())
+  );

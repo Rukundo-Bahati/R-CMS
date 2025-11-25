@@ -1,0 +1,9 @@
+Role	          Email	                  Password
+President	      president@church.com	  President@123
+Grand Père/Mère   grandmere@church.com	  GrandMere@123
+Accountant	      accountant@church.com	  Accountant@123
+Family	          family@church.com	      Family@123
+Choir	          choir@church.com	      Choir@123
+Intercessors	  intercessor@church.com  Intercessor@123
+Ushers	          usher@church.com	      Usher@123
+Pastor	          pastor@church.com	      Pastor@123
