@@ -10,6 +10,7 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
+    
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
@@ -34,7 +35,6 @@
   },
   "include": [
     "client/**/*",
-    "server/**/*",
     "shared/**/*",
     "vite.config.ts",
     "vite.config.server.ts"
