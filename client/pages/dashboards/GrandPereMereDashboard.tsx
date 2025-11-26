@@ -292,9 +292,9 @@ export default function GrandPereMereDashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Family Distribution */}
-        <Card className="p-6 lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Families Distribution</h3>
@@ -344,7 +344,7 @@ export default function GrandPereMereDashboard() {
         </Card>
 
         {/* Members Growth */}
-        <Card className="p-6 lg:col-span-1 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Members Growth</h3>
@@ -361,7 +361,7 @@ export default function GrandPereMereDashboard() {
               </Button>
             </div>
           </div>
-          <div className="h-80">
+          <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={familyGrowthData}

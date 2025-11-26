@@ -366,25 +366,6 @@ export default function PresidentDashboard() {
                     <Cell key={`cell-${index}`} fill="#180e42" />
                   ))}
                 </Bar>
-                <Legend 
-                  content={() => (
-                    <div className="flex justify-center space-x-4 mt-2">
-                      {[
-                        { name: 'Term 1', color: '#4f46e5' },
-                        { name: 'Term 2', color: '#8b5cf6' },
-                        { name: 'Term 3', color: '#a78bfa' },
-                      ].map((item, index) => (
-                        <div key={index} className="flex items-center">
-                          <div 
-                            className="w-3 h-3 rounded-sm mr-1" 
-                            style={{ backgroundColor: item.color }}
-                          />
-                          <span className="text-xs text-gray-600">{item.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -438,21 +419,21 @@ export default function PresidentDashboard() {
 
         {/* Quick Stats */}
         <div className="space-y-4">
-          <Card className="p-6 bg-primary text-white">
+          <Card className="p-6 bg-white text-gray-900">
             <h3 className="text-lg font-semibold mb-4">Committee Members</h3>
             <div className="space-y-3">
               {committeeMembers.map((member) => (
-                <div key={member.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+                <div key={member.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-white">{member.name}</p>
-                    <p className="text-sm text-white/80">{member.role}</p>
+                    <p className="font-medium text-gray-900">{member.name}</p>
+                    <p className="text-sm text-gray-600">{member.role}</p>
                   </div>
                 </div>
               ))}
-              <Button variant="secondary" className="w-full mt-2 bg-white text-primary hover:bg-white/90" onClick={() => navigate('/dashboard/president/committee')}>
+              <Button variant="default" className="w-full mt-2" onClick={() => navigate('/dashboard/president/committee')}>
                 View All Committee
               </Button>
             </div>
