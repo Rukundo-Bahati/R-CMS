@@ -23,6 +23,7 @@ import Schedule from "./pages/Schedule";
 import Placeholder from "./pages/Placeholder";
 import NotFound from "./pages/NotFound";
 import { AnimatedRoute } from "@/components/ui/AnimatedRoute";
+import Departments from "./pages/Departments";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -123,6 +124,15 @@ function AppRoutes() {
             element={
               <AnimatedRoute className="h-full">
                 <Committee />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/departments"
+            element={
+              <AnimatedRoute className="h-full">
+                <Departments />
               </AnimatedRoute>
             }
           />
