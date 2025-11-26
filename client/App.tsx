@@ -17,6 +17,7 @@ import PortalSelection from "./pages/PortalSelection";
 import Dashboard from "./pages/Dashboard";
 import Members from "./pages/Members";
 import Families from "./pages/Families";
+import Committee from "./pages/Committee";
 import Profile from "./pages/Profile";
 import Schedule from "./pages/Schedule";
 import Placeholder from "./pages/Placeholder";
@@ -116,7 +117,16 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-          
+
+          <Route
+            path="/dashboard/:portal/committee"
+            element={
+              <AnimatedRoute className="h-full">
+                <Committee />
+              </AnimatedRoute>
+            }
+          />
+
           <Route
             path="/dashboard/:portal/schedule"
             element={

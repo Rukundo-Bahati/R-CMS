@@ -257,7 +257,7 @@ export default function PresidentDashboard() {
           icon={<Users2 className="w-5 h-5" />}
           title="Committee Members"
           value={totalCommitteeMembers}
-          variant="default"
+          variant="primary"
         />
         <StatCard
           icon={<HandCoins className="w-5 h-5" />}
