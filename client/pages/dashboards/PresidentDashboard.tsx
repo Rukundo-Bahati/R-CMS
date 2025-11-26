@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { useNavigate } from "react-router-dom";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, Cell } from "recharts";
 import { Users, User, Calendar, Clock, AlertCircle, TrendingUp, TrendingDown, Building2, Users2, HandCoins, FileText } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -197,6 +198,7 @@ const ActivityItem = ({ title, time, type }: { title: string; time: string; type
 
 export default function PresidentDashboard() {
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('month');
+  const navigate = useNavigate();
 
   // Calculate total offerings from the last 6 months
   const totalLast6Months = offeringData.reduce((sum, month) => sum + month.amount, 0);
@@ -275,41 +277,26 @@ export default function PresidentDashboard() {
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Department Distribution</h3>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" className="text-xs">View All</Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate('/dashboard/president/finance')}>View All</Button>
             </div>
           </div>
-          <div className="h-80">
+          <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={departmentData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="members"
-                  label={false}
-                  labelLine={false}
-                >
-                  {departmentData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.color}
-                      stroke="#fff"
-                      strokeWidth={2}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value, name, props) => {
-                    const total = departmentData.reduce((sum, dept) => sum + dept.members, 0);
-                    const percentage = ((props.payload.members / total) * 100).toFixed(1);
-                    return [
-                      `${props.payload.members} members (${percentage}%)`,
-                      props.payload.name
-                    ];
-                  }}
+              <LineChart data={departmentData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  formatter={(value) => [`${value} members`, 'Members']}
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
@@ -317,37 +304,15 @@ export default function PresidentDashboard() {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                   }}
                 />
-                <Legend 
-                  layout="vertical"
-                  verticalAlign="middle"
-                  align="right"
-                  formatter={(value) => {
-                    const entry = departmentData.find(d => d.name === value);
-                    return (
-                      <span className="text-sm text-gray-600">
-                        {value} ({entry?.members} members)
-                      </span>
-                    );
-                  }}
+                <Line
+                  type="monotone"
+                  dataKey="members"
+                  stroke="#180e42"
+                  strokeWidth={3}
+                  dot={{ fill: '#180e42', strokeWidth: 2, r: 6 }}
                 />
-              </PieChart>
+              </LineChart>
             </ResponsiveContainer>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {departmentData.map((dept, index) => {
-              const total = departmentData.reduce((sum, d) => sum + d.members, 0);
-              const percentage = ((dept.members / total) * 100).toFixed(0);
-              return (
-                <div key={index} className="flex items-center bg-white/50 px-2 py-1 rounded-md">
-                  <div 
-                    className="w-3 h-3 rounded-full mr-1.5" 
-                    style={{ backgroundColor: dept.color }}
-                  />
-                  <span className="text-xs font-medium text-gray-700">{dept.name}</span>
-                  <span className="ml-1 text-xs text-gray-500">• {dept.members}</span>
-                </div>
-              );
-            })}
           </div>
         </Card>
 
@@ -356,7 +321,7 @@ export default function PresidentDashboard() {
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Offerings by Term</h3>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" className="text-xs">View All</Button>
+              <Button variant="outline" size="sm" className="text-xs" onClick={() => navigate('/dashboard/president/finance')}>View All</Button>
             </div>
           </div>
           <div className="h-80">
@@ -391,14 +356,14 @@ export default function PresidentDashboard() {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                   }}
                 />
-                <Bar 
-                  dataKey="amount" 
+                <Bar
+                  dataKey="amount"
                   name="Offerings"
                   radius={[4, 4, 0, 0]}
                   maxBarSize={60}
                 >
                   {offeringData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill="#180e42" />
                   ))}
                 </Bar>
                 <Legend 
@@ -487,7 +452,7 @@ export default function PresidentDashboard() {
                   </div>
                 </div>
               ))}
-              <Button variant="secondary" className="w-full mt-2 bg-white text-primary hover:bg-white/90">
+              <Button variant="secondary" className="w-full mt-2 bg-white text-primary hover:bg-white/90" onClick={() => navigate('/dashboard/president/committee')}>
                 View All Committee
               </Button>
             </div>
@@ -513,7 +478,7 @@ export default function PresidentDashboard() {
                   </span>
                 </div>
               ))}
-              <Button variant="outline" className="w-full mt-2">
+              <Button variant="outline" className="w-full mt-2" onClick={() => navigate('/dashboard/president/equipment')}>
                 View All Equipment
               </Button>
             </div>

@@ -1,8 +1,5 @@
 import { useState } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -11,6 +8,9 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  LineChart,
+  Line,
+  Cell,
 } from "recharts";
 import { Users, User, Calendar, Clock, AlertCircle, TrendingUp, TrendingDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -294,7 +294,7 @@ export default function GrandPereMereDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Family Distribution */}
-        <Card className="p-6 lg:col-span-1 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-6 lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Families Distribution</h3>
@@ -304,41 +304,47 @@ export default function GrandPereMereDashboard() {
               View All
             </Button>
           </div>
-          <div className="h-80">
+          <div className="h-96">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={getFormattedFamilyData()}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={70}
-                  outerRadius={100}
-                  paddingAngle={2}
-                  dataKey="value"
-                  label={false}
-                >
-                  {getFormattedFamilyData().map((entry) => (
-                    <Cell 
-                      key={`cell-${entry.id}`} 
-                      fill={entry.color}
-                      stroke="#fff"
-                      strokeWidth={2}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value, name, props) => [
-                    `${props.payload.name} (${props.payload.generation})`,
-                    `${value} members (${props.payload.percentage}%)`
-                  ]}
+              <LineChart data={getFormattedFamilyData()}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
                 />
-              </PieChart>
+                <YAxis
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  formatter={(value) => [`${value} members`, 'Members']}
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '0.5rem',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#180e42"
+                  strokeWidth={3}
+                  dot={{ fill: '#180e42', strokeWidth: 2, r: 6 }}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
         {/* Members Growth */}
-        <Card className="p-6 lg:col-span-2 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="p-6 lg:col-span-1 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Members Growth</h3>
@@ -372,13 +378,13 @@ export default function GrandPereMereDashboard() {
                   dataKey="name" 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  tick={{ fontSize: 12, fill: '#180e42' }}
                   height={50}
                 />
                 <YAxis 
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  tick={{ fontSize: 12, fill: '#180e42' }}
                 />
                 <Tooltip 
                   formatter={(value, name, props) => {
@@ -395,15 +401,15 @@ export default function GrandPereMereDashboard() {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                   }}
                 />
-                <Bar 
-                  dataKey="totalMembers" 
+                <Bar
+                  dataKey="totalMembers"
                   name="Members"
                   radius={[4, 4, 0, 0]}
                 >
                   {familyGrowthData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.color}
+                    <Cell
+                      key={`cell-${index}`}
+                      fill="#180e42"
                       className="hover:opacity-90 transition-opacity"
                     />
                   ))}
