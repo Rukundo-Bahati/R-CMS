@@ -156,15 +156,6 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-
-          <Route
-            path="/dashboard/:portal/finance"
-            element={
-              <AnimatedRoute className="h-full">
-                <Finance />
-              </AnimatedRoute>
-            }
-          />
           
           <Route
             path="/dashboard/:portal/:section"
