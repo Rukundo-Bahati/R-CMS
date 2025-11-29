@@ -4,6 +4,7 @@ import PresidentDashboard from "./dashboards/PresidentDashboard";
 import ChoirDashboard from "./dashboards/ChoirDashboard";
 import DefaultDashboard from "./dashboards/DefaultDashboard";
 import UsherDashboard from "./dashboards/UsherDashboard";
+import IntercessorDashboard from "./dashboards/IntercessorDashboard";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -23,6 +24,8 @@ export default function Dashboard() {
       return <ChoirDashboard />;
     case "ushers":
       return <UsherDashboard />;
+    case "intercessors":
+      return <IntercessorDashboard />;
 
     default:
       return <DefaultDashboard />;

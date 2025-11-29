@@ -33,6 +33,9 @@ import UsherMembers from "./pages/usher/UsherMembers";
 import UsherAttendance from "./pages/usher/UsherAttendance";
 import UsherSchedule from "./pages/usher/UsherSchedule";
 import UsherNotes from "./pages/usher/UsherNotes";
+import IntercessorMembers from "./pages/intercessors/IntercessorMembers";
+import IntercessorSchedule from "./pages/intercessors/IntercessorSchedule";
+import IntercessorNotes from "./pages/intercessors/IntercessorNotes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -233,6 +236,34 @@ function AppRoutes() {
             element={
               <AnimatedRoute className="h-full">
                 <UsherNotes />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Intercessor Routes */}
+          <Route
+            path="/dashboard/intercessors/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/intercessors/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/intercessors/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorNotes />
               </AnimatedRoute>
             }
           />
