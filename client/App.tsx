@@ -29,6 +29,10 @@ import Finance from "./pages/Finance";
 import Notes from "./pages/Notes";
 import ChoirAttendance from "./pages/choir/ChoirAttendance";
 import ChoirContribution from "./pages/choir/ChoirContribution";
+import UsherMembers from "./pages/usher/UsherMembers";
+import UsherAttendance from "./pages/usher/UsherAttendance";
+import UsherSchedule from "./pages/usher/UsherSchedule";
+import UsherNotes from "./pages/usher/UsherNotes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -192,6 +196,43 @@ function AppRoutes() {
             element={
               <AnimatedRoute className="h-full">
                 <ChoirContribution />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Usher Routes */}
+          <Route
+            path="/dashboard/ushers/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/attendance"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherAttendance />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherNotes />
               </AnimatedRoute>
             }
           />

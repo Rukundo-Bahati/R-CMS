@@ -3,6 +3,7 @@ import GrandPereMereDashboard from "./dashboards/GrandPereMereDashboard";
 import PresidentDashboard from "./dashboards/PresidentDashboard";
 import ChoirDashboard from "./dashboards/ChoirDashboard";
 import DefaultDashboard from "./dashboards/DefaultDashboard";
+import UsherDashboard from "./dashboards/UsherDashboard";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -20,6 +21,8 @@ export default function Dashboard() {
 
     case "choir":
       return <ChoirDashboard />;
+    case "ushers":
+      return <UsherDashboard />;
 
     default:
       return <DefaultDashboard />;

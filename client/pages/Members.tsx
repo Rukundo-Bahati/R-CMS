@@ -19,6 +19,10 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+
+// New form components for choir and general members
+import { ChoirMemberForm } from "@/components/Members/ChoirMemberForm";
+import { GeneralMemberForm } from "@/components/Members/GeneralMemberForm";
 import {
   Table,
   TableHeader,
@@ -292,86 +296,9 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
               />
             </div>
             {portal === 'choir' ? (
-              <div className="space-y-2">
-                <Label htmlFor="isCommittee">Committee Member</Label>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="isCommittee"
-                    name="isCommittee"
-                    checked={formData.isCommittee || false}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isCommittee: e.target.checked }))}
-                    disabled={mode === 'view'}
-                    className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-                  />
-                  <label htmlFor="isCommittee" className="text-sm text-muted-foreground">
-                    {formData.isCommittee ? 'Yes' : 'No'}
-                  </label>
-                </div>
-              </div>
+              <ChoirMemberForm formData={formData} onChange={handleChange} mode={mode} />
             ) : (
-              <div className="space-y-2">
-                <Label htmlFor="department">Department</Label>
-                <Input
-                  id="department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  disabled={mode === 'view'}
-                />
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="class">Class/Intake</Label>
-              <Input
-                id="class"
-                name="class"
-                type="number"
-                value={formData.class}
-                onChange={handleChange}
-                disabled={mode === 'view'}
-              />
-            </div>
-
-            {portal === 'choir' ? (
-              <div className="space-y-2">
-                <Label htmlFor="voice">Voice Type</Label>
-                <select
-                  id="voice"
-                  name="voice"
-                  value={formData.voice || ''}
-                  onChange={handleChange}
-                  disabled={mode === 'view'}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                >
-                  <option value="">Select a voice</option>
-                  <option value="Soprano">Soprano</option>
-                  <option value="Alto">Alto</option>
-                  <option value="Tenor">Tenor</option>
-                  <option value="Bass">Bass</option>
-                </select>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label htmlFor="familyId">Family</Label>
-                <select
-                  id="familyId"
-                  name="familyId"
-                  value={formData.familyId}
-                  onChange={handleChange}
-                  disabled={mode === 'view'}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                >
-                  <option value="">Select a family</option>
-                  {initialFamilies.map((family) => (
-                    <option key={family.id} value={family.id}>
-                      {family.name} ({family.generation})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <GeneralMemberForm formData={formData} onChange={handleChange} mode={mode} />
             )}
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
