@@ -10,12 +10,12 @@ const upcomingFridaySchedule = 5;
 const prayerRequests = 42;
 const completedPrayers = 38;
 
-// Mock data for weekly prayer sessions
-const prayerSessionData = [
-  { name: "Week 1", attended: 22, absent: 6 },
-  { name: "Week 2", attended: 25, absent: 3 },
-  { name: "Week 3", attended: 20, absent: 8 },
-  { name: "Week 4", attended: 24, absent: 4 },
+// Mock data for prayer requests by category
+const prayerRequestData = [
+  { name: "Healing", count: 15 },
+  { name: "Guidance", count: 12 },
+  { name: "Thanksgiving", count: 8 },
+  { name: "Protection", count: 7 },
 ];
 
 // Mock data for recent activities
@@ -109,14 +109,14 @@ export default function IntercessorDashboard() {
 
       {/* Charts and Content Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Prayer Session Attendance */}
+        {/* Prayer Requests by Category */}
         <Card className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Weekly Prayer Attendance</h3>
+            <h3 className="text-lg font-semibold">Prayer Requests by Category</h3>
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={prayerSessionData}>
+              <BarChart data={prayerRequestData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} />
                 <YAxis axisLine={false} tickLine={false} />
@@ -128,8 +128,7 @@ export default function IntercessorDashboard() {
                   }}
                 />
                 <Legend />
-                <Bar dataKey="attended" name="Attended" fill="#180e42" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="absent" name="Absent" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" name="Requests" fill="#180e42" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
