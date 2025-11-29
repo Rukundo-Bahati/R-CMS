@@ -1,5 +1,0 @@
-- [ ] Update imports in PresidentDashboard.tsx to include LineChart and Line from recharts
-- [ ] Replace the PieChart component with LineChart in the Department Distribution section
-- [ ] Configure LineChart with XAxis (departments), YAxis (members), and Line with stroke color #180e42
-- [ ] Remove unnecessary elements like Legend and bottom department info flex
-- [ ] Test the changes by running the application

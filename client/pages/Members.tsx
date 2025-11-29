@@ -67,6 +67,8 @@ interface Member {
   familyId: string;
   status: "active" | "inactive";
   class: string;
+  voice?: "Soprano" | "Alto" | "Tenor" | "Bass";
+  isCommittee?: boolean;
 }
 
 // Utility function to check if a string is an email
@@ -169,6 +171,7 @@ const mockMembers: Member[] = [
     familyId: "2",
     status: "active",
     class: "2024",
+    voice: "Bass",
   },
 ];
 
@@ -178,14 +181,16 @@ interface MemberDialogProps {
   onClose: () => void;
   onSave: (member: Member) => void;
   mode: 'view' | 'edit';
+  portal?: string;
 }
 
-const MemberDialog: React.FC<MemberDialogProps> = ({ 
-  member, 
-  isOpen, 
-  onClose, 
+const MemberDialog: React.FC<MemberDialogProps> = ({
+  member,
+  isOpen,
+  onClose,
   onSave,
-  mode 
+  mode,
+  portal
 }) => {
   const [formData, setFormData] = useState<Omit<Member, 'id'>>({
     name: '',
@@ -195,6 +200,8 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
     familyId: '',
     status: 'active',
     class: new Date().getFullYear().toString(),
+    voice: undefined,
+    isCommittee: false,
   });
 
   useEffect(() => {
@@ -207,6 +214,8 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
         familyId: member.familyId,
         status: member.status,
         class: member.class,
+        voice: member.voice,
+        isCommittee: member.isCommittee || false,
       });
     }
   }, [member]);
@@ -282,16 +291,36 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
                 disabled={mode === 'view'}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="department">Department</Label>
-              <Input
-                id="department"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                disabled={mode === 'view'}
-              />
-            </div>
+            {portal === 'choir' ? (
+              <div className="space-y-2">
+                <Label htmlFor="isCommittee">Committee Member</Label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="isCommittee"
+                    name="isCommittee"
+                    checked={formData.isCommittee || false}
+                    onChange={(e) => setFormData(prev => ({ ...prev, isCommittee: e.target.checked }))}
+                    disabled={mode === 'view'}
+                    className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label htmlFor="isCommittee" className="text-sm text-muted-foreground">
+                    {formData.isCommittee ? 'Yes' : 'No'}
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="department">Department</Label>
+                <Input
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  disabled={mode === 'view'}
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="class">Class/Intake</Label>
               <Input
@@ -303,25 +332,47 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
                 disabled={mode === 'view'}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="familyId">Family</Label>
-              <select
-                id="familyId"
-                name="familyId"
-                value={formData.familyId}
-                onChange={handleChange}
-                disabled={mode === 'view'}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                required
-              >
-                <option value="">Select a family</option>
-                {initialFamilies.map((family) => (
-                  <option key={family.id} value={family.id}>
-                    {family.name} ({family.generation})
-                  </option>
-                ))}
-              </select>
-            </div>
+
+            {portal === 'choir' ? (
+              <div className="space-y-2">
+                <Label htmlFor="voice">Voice Type</Label>
+                <select
+                  id="voice"
+                  name="voice"
+                  value={formData.voice || ''}
+                  onChange={handleChange}
+                  disabled={mode === 'view'}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  required
+                >
+                  <option value="">Select a voice</option>
+                  <option value="Soprano">Soprano</option>
+                  <option value="Alto">Alto</option>
+                  <option value="Tenor">Tenor</option>
+                  <option value="Bass">Bass</option>
+                </select>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="familyId">Family</Label>
+                <select
+                  id="familyId"
+                  name="familyId"
+                  value={formData.familyId}
+                  onChange={handleChange}
+                  disabled={mode === 'view'}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  required
+                >
+                  <option value="">Select a family</option>
+                  {initialFamilies.map((family) => (
+                    <option key={family.id} value={family.id}>
+                      {family.name} ({family.generation})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <select
@@ -337,7 +388,7 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
               </select>
             </div>
           </div>
-          
+
           {mode === 'edit' && (
             <DialogFooter className="mt-6">
               <Button type="button" variant="outline" onClick={onClose}>
@@ -350,7 +401,7 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
           )}
         </form>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 };
 
@@ -375,7 +426,7 @@ export default function Members() {
 
   const sortedAndFilteredMembers = React.useMemo(() => {
     let result = [...members];
-    
+
     // Apply search filter
     if (debouncedSearchTerm) {
       const searchLower = debouncedSearchTerm.toLowerCase();
@@ -395,13 +446,13 @@ export default function Members() {
       result.sort((a, b) => {
         let aValue = a[sortConfig.key];
         let bValue = b[sortConfig.key];
-        
+
         // Special handling for family name
         if (sortConfig.key === 'familyId') {
           aValue = initialFamilies.find(f => f.id === a.familyId)?.name || '';
           bValue = initialFamilies.find(f => f.id === b.familyId)?.name || '';
         }
-        
+
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
@@ -411,10 +462,10 @@ export default function Members() {
         return 0;
       });
     }
-    
+
     return result;
   }, [members, debouncedSearchTerm, sortConfig]);
-  
+
   const requestSort = (key: keyof Member) => {
     let direction: SortDirection = 'asc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -433,7 +484,7 @@ export default function Members() {
   };
 
   const SortableHeader = ({ columnKey, children }: { columnKey: keyof Member; children: React.ReactNode }) => (
-    <TableHead 
+    <TableHead
       className="cursor-pointer hover:bg-gray-50 transition-colors"
       onClick={() => requestSort(columnKey)}
     >
@@ -458,7 +509,7 @@ export default function Members() {
 
   const handleUpdateMember = (updatedMember: Member) => {
     setMembers(prev => {
-      const updated = prev.map(member => 
+      const updated = prev.map(member =>
         member.id === updatedMember.id ? updatedMember : member
       );
       toast({
@@ -526,29 +577,31 @@ export default function Members() {
           </p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Member
-          </Button>
-        </DialogTrigger>
-        <MemberDialog
-          member={null}
-          isOpen={isAddOpen}
-          onClose={() => setIsAddOpen(false)}
-          onSave={handleAddMember}
-          mode="edit"
-        />
-      </Dialog>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add Member
+            </Button>
+          </DialogTrigger>
+          <MemberDialog
+            member={null}
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+            onSave={handleAddMember}
+            mode="edit"
+            portal={user?.portal}
+          />
+        </Dialog>
 
-      {/* Member View/Edit Dialog */}
-      <MemberDialog
-        member={selectedMember}
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSave={handleUpdateMember}
-        mode={dialogMode}
-      />
+        {/* Member View/Edit Dialog */}
+        <MemberDialog
+          member={selectedMember}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSave={handleUpdateMember}
+          mode={dialogMode}
+          portal={user?.portal}
+        />
       </div>
 
       <div className="mb-8">
@@ -583,84 +636,106 @@ export default function Members() {
 
       {currentMembers.length > 0 ? (
         <div className="rounded-md border">
-        <Table>
-          <TableHeader className="bg-gray-50">
-            <TableRow>
-              <SortableHeader columnKey="name">Member Information</SortableHeader>
-              <SortableHeader columnKey="email">Email</SortableHeader>
-              <SortableHeader columnKey="department">Department</SortableHeader>
-              <SortableHeader columnKey="class">Class</SortableHeader>
-              <SortableHeader columnKey="familyId">Family Name</SortableHeader>
-              <SortableHeader columnKey="status">Status</SortableHeader>
-              <TableHead className="w-[80px] text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentMembers.map((member) => (
-              <TableRow key={member.id}>
-                <TableCell className="font-medium">
-                  {member.name}
-                </TableCell>
-                <TableCell>{member.email}</TableCell>
-                <TableCell>{member.department}</TableCell>
-                <TableCell>{member.class} Intake</TableCell>
-                <TableCell>
-                  {initialFamilies.find(f => f.id === member.familyId)?.name || '-'}
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    member.status === "active" 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-gray-100 text-gray-800"
-                  }`}>
-                    {member.status === "active" ? "Active" : "Inactive"}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem 
-                        className="cursor-pointer"
-                        onClick={() => openMemberDialog(member, 'view')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        <span>View Profile</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className="cursor-pointer"
-                        onClick={() => openMemberDialog(member, 'edit')}
-                      >
-                        <Edit className="mr-2 h-4 w-4" />
-                        <span>Edit Details</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className="cursor-pointer"
-                        onClick={() => handleViewAttendance(member.name)}
-                      >
-                        <CalendarDays className="mr-2 h-4 w-4" />
-                        <span>View Attendance</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className="cursor-pointer text-red-600"
-                        onClick={() => handleDeleteMember(member.id, member.name)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Remove Member</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <SortableHeader columnKey="name">Member Information</SortableHeader>
+                <SortableHeader columnKey="email">Email</SortableHeader>
+                {user?.portal === 'choir' ? (
+                  <TableHead>Committee</TableHead>
+                ) : (
+                  <SortableHeader columnKey="department">Department</SortableHeader>
+                )}
+                <SortableHeader columnKey="class">Class</SortableHeader>
+                {user?.portal === 'choir' ? (
+                  <SortableHeader columnKey="voice">Voice</SortableHeader>
+                ) : (
+                  <SortableHeader columnKey="familyId">Family Name</SortableHeader>
+                )}
+                <SortableHeader columnKey="status">Status</SortableHeader>
+                <TableHead className="w-[80px] text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {currentMembers.map((member) => (
+                <TableRow key={member.id}>
+                  <TableCell className="font-medium">
+                    {member.name}
+                  </TableCell>
+                  <TableCell>{member.email}</TableCell>
+                  <TableCell>
+                    {user?.portal === 'choir' ? (
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${member.isCommittee
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-600"
+                        }`}>
+                        {member.isCommittee ? "Yes" : "No"}
+                      </span>
+                    ) : (
+                      member.department
+                    )}
+                  </TableCell>
+                  <TableCell>{member.class} Intake</TableCell>
+                  <TableCell>
+                    {user?.portal === 'choir' ? (
+                      member.voice || '-'
+                    ) : (
+                      initialFamilies.find(f => f.id === member.familyId)?.name || '-'
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${member.status === "active"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
+                      }`}>
+                      {member.status === "active" ? "Active" : "Inactive"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openMemberDialog(member, 'view')}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          <span>View Profile</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openMemberDialog(member, 'edit')}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          <span>Edit Details</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => handleViewAttendance(member.name)}
+                        >
+                          <CalendarDays className="mr-2 h-4 w-4" />
+                          <span>View Attendance</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600"
+                          onClick={() => handleDeleteMember(member.id, member.name)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Remove Member</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       ) : (
         <Card className="text-center py-12">
           <p className="text-gray-600">No members found matching your search</p>

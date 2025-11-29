@@ -65,16 +65,17 @@ const getNavItems = (portal: Portal): NavItem[] => {
           href: `${baseHref}/committee`,
           icon: <Users2 className="w-5 h-5" />,
         },
+
+        {
+          label: "Notes & Plans",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
         {
           label: "Profile",
           href: "/profile",
           icon: <User className="w-5 h-5" />,
-        },
-        {
-          label: "Notes",
-          href: `${baseHref}/notes`,
-          icon: <StickyNote className="w-5 h-5" />,
-        },
+        }
       ];
 
     case "grand_pere_mere":
@@ -99,16 +100,17 @@ const getNavItems = (portal: Portal): NavItem[] => {
           href: `${baseHref}/schedule`,
           icon: <Calendar className="w-5 h-5" />,
         },
+
+        {
+          label: "Notes & Plans",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
         {
           label: "Profile",
           href: "/profile",
           icon: <User className="w-5 h-5" />,
-        },
-        {
-          label: "Notes",
-          href: `${baseHref}/notes`,
-          icon: <StickyNote className="w-5 h-5" />,
-        },
+        }
       ];
 
     case "accountant":
@@ -123,16 +125,17 @@ const getNavItems = (portal: Portal): NavItem[] => {
           href: `${baseHref}/expenses`,
           icon: <Wallet className="w-5 h-5" />,
         },
+
+        {
+          label: "Notes & Plans",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
         {
           label: "Profile",
           href: "/profile",
           icon: <User className="w-5 h-5" />,
-        },
-        {
-          label: "Notes",
-          href: `${baseHref}/notes`,
-          icon: <StickyNote className="w-5 h-5" />,
-        },
+        }
       ];
 
     case "choir":
@@ -148,20 +151,31 @@ const getNavItems = (portal: Portal): NavItem[] => {
           icon: <Clock className="w-5 h-5" />,
         },
         {
+          label: "Contribution",
+          href: `${baseHref}/contribution`,
+          icon: <Wallet className="w-5 h-5" />,
+        },
+        {
           label: "Members",
           href: `${baseHref}/members`,
           icon: <Users className="w-5 h-5" />,
         },
         {
-          label: "Profile",
-          href: "/profile",
-          icon: <User className="w-5 h-5" />,
+          label: "Committee",
+          href: `${baseHref}/committee`,
+          icon: <Users2 className="w-5 h-5" />,
         },
+
         {
-          label: "Notes",
+          label: "Notes & Plans",
           href: `${baseHref}/notes`,
           icon: <StickyNote className="w-5 h-5" />,
         },
+        {
+          label: "Profile",
+          href: "/profile",
+          icon: <User className="w-5 h-5" />,
+        }
       ];
 
     default:

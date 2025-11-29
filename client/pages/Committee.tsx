@@ -65,6 +65,7 @@ interface Committee {
   role: string;
   department: string;
   status: "active" | "inactive";
+  year: string;
 }
 
 // Utility function to check if a string is an email
@@ -85,6 +86,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Chairperson",
     department: "Leadership",
     status: "active",
+    year: "2025-2026",
   },
   {
     id: "2",
@@ -94,6 +96,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Vice Chair",
     department: "Leadership",
     status: "active",
+    year: "2025-2026",
   },
   {
     id: "3",
@@ -103,6 +106,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Secretary",
     department: "Administration",
     status: "active",
+    year: "2025-2026",
   },
   {
     id: "4",
@@ -112,6 +116,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Treasurer",
     department: "Finance",
     status: "active",
+    year: "2025-2026",
   },
   {
     id: "5",
@@ -121,6 +126,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Worship",
     status: "active",
+    year: "2024-2025",
   },
   {
     id: "6",
@@ -130,6 +136,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Youth Ministry",
     status: "active",
+    year: "2024-2025",
   },
   {
     id: "7",
@@ -139,6 +146,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Evangelism",
     status: "active",
+    year: "2023-2024",
   },
   {
     id: "8",
@@ -148,6 +156,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Children's Ministry",
     status: "inactive",
+    year: "2023-2024",
   },
   {
     id: "9",
@@ -157,6 +166,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Men's Ministry",
     status: "active",
+    year: "2025-2026",
   },
   {
     id: "10",
@@ -166,6 +176,7 @@ const mockCommitteeMembers: Committee[] = [
     role: "Member",
     department: "Women's Ministry",
     status: "active",
+    year: "2025-2026",
   },
 ];
 
@@ -191,6 +202,7 @@ const CommitteeDialog: React.FC<CommitteeDialogProps> = ({
     role: '',
     department: '',
     status: 'active',
+    year: '2025-2026',
   });
 
   useEffect(() => {
@@ -202,6 +214,7 @@ const CommitteeDialog: React.FC<CommitteeDialogProps> = ({
         role: committee.role,
         department: committee.department,
         status: committee.status,
+        year: committee.year,
       });
     }
   }, [committee]);
@@ -313,6 +326,21 @@ const CommitteeDialog: React.FC<CommitteeDialogProps> = ({
                 <option value="inactive">Inactive</option>
               </select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="year">Year</Label>
+              <select
+                id="year"
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                disabled={mode === 'view'}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="2023-2024">2023-2024</option>
+                <option value="2024-2025">2024-2025</option>
+                <option value="2025-2026">2025-2026</option>
+              </select>
+            </div>
           </div>
 
           {mode === 'edit' && (
@@ -342,7 +370,10 @@ export default function Committee() {
   const [dialogMode, setDialogMode] = useState<'view' | 'edit'>('view');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'name', direction: 'asc' });
+  const [selectedYear, setSelectedYear] = useState("2025-2026");
   const itemsPerPage = 5;
+
+  const years = ["2023-2024", "2024-2025", "2025-2026"];
 
   // On mount, set committee data
   useEffect(() => {
@@ -357,12 +388,15 @@ export default function Committee() {
       const searchLower = debouncedSearchTerm.toLowerCase();
       result = result.filter((committee) => {
         return (
-          committee.name.toLowerCase().includes(searchLower) ||
-          committee.email.toLowerCase().includes(searchLower) ||
-          committee.role.toLowerCase().includes(searchLower) ||
-          committee.department.toLowerCase().includes(searchLower)
+          committee.year === selectedYear &&
+          (committee.name.toLowerCase().includes(searchLower) ||
+            committee.email.toLowerCase().includes(searchLower) ||
+            committee.role.toLowerCase().includes(searchLower) ||
+            committee.department.toLowerCase().includes(searchLower))
         );
       });
+    } else {
+      result = result.filter((committee) => committee.year === selectedYear);
     }
 
     // Apply sorting
@@ -382,7 +416,7 @@ export default function Committee() {
     }
 
     return result;
-  }, [committees, debouncedSearchTerm, sortConfig]);
+  }, [committees, debouncedSearchTerm, sortConfig, selectedYear]);
 
   const requestSort = (key: keyof Committee) => {
     let direction: SortDirection = 'asc';
@@ -488,29 +522,29 @@ export default function Committee() {
           </p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Committee Member
-          </Button>
-        </DialogTrigger>
-        <CommitteeDialog
-          committee={null}
-          isOpen={isAddOpen}
-          onClose={() => setIsAddOpen(false)}
-          onSave={handleAddCommittee}
-          mode="edit"
-        />
-      </Dialog>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add Committee Member
+            </Button>
+          </DialogTrigger>
+          <CommitteeDialog
+            committee={null}
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+            onSave={handleAddCommittee}
+            mode="edit"
+          />
+        </Dialog>
 
-      {/* Committee View/Edit Dialog */}
-      <CommitteeDialog
-        committee={selectedCommittee}
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSave={handleUpdateCommittee}
-        mode={dialogMode}
-      />
+        {/* Committee View/Edit Dialog */}
+        <CommitteeDialog
+          committee={selectedCommittee}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSave={handleUpdateCommittee}
+          mode={dialogMode}
+        />
       </div>
 
       <div className="mb-8">
@@ -545,73 +579,72 @@ export default function Committee() {
 
       {currentCommittees.length > 0 ? (
         <div className="rounded-md border">
-        <Table>
-          <TableHeader className="bg-gray-50">
-            <TableRow>
-              <SortableHeader columnKey="name">Committee Member</SortableHeader>
-              <SortableHeader columnKey="email">Email</SortableHeader>
-              <SortableHeader columnKey="role">Role</SortableHeader>
-              <SortableHeader columnKey="department">Department</SortableHeader>
-              <SortableHeader columnKey="status">Status</SortableHeader>
-              <TableHead className="w-[80px] text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentCommittees.map((committee) => (
-              <TableRow key={committee.id}>
-                <TableCell className="font-medium">
-                  {committee.name}
-                </TableCell>
-                <TableCell>{committee.email}</TableCell>
-                <TableCell>{committee.role}</TableCell>
-                <TableCell>{committee.department}</TableCell>
-                <TableCell>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    committee.status === "active"
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <SortableHeader columnKey="name">Committee Member</SortableHeader>
+                <SortableHeader columnKey="email">Email</SortableHeader>
+                <SortableHeader columnKey="role">Role</SortableHeader>
+                <SortableHeader columnKey="department">Department</SortableHeader>
+                <SortableHeader columnKey="status">Status</SortableHeader>
+                <TableHead className="w-[80px] text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currentCommittees.map((committee) => (
+                <TableRow key={committee.id}>
+                  <TableCell className="font-medium">
+                    {committee.name}
+                  </TableCell>
+                  <TableCell>{committee.email}</TableCell>
+                  <TableCell>{committee.role}</TableCell>
+                  <TableCell>{committee.department}</TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${committee.status === "active"
                       ? "bg-green-100 text-green-800"
                       : "bg-gray-100 text-gray-800"
-                  }`}>
-                    {committee.status === "active" ? "Active" : "Inactive"}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => openCommitteeDialog(committee, 'view')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        <span>View Profile</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => openCommitteeDialog(committee, 'edit')}
-                      >
-                        <Edit className="mr-2 h-4 w-4" />
-                        <span>Edit Details</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer text-red-600"
-                        onClick={() => handleDeleteCommittee(committee.id, committee.name)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Remove Member</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+                      }`}>
+                      {committee.status === "active" ? "Active" : "Inactive"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openCommitteeDialog(committee, 'view')}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          <span>View Profile</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openCommitteeDialog(committee, 'edit')}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          <span>Edit Details</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600"
+                          onClick={() => handleDeleteCommittee(committee.id, committee.name)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Remove Member</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       ) : (
         <Card className="text-center py-12">
           <p className="text-gray-600">No committee members found matching your search</p>
@@ -663,8 +696,21 @@ export default function Committee() {
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year} {year === "2025-2026" ? "[Current]" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   );
 }
-  
+

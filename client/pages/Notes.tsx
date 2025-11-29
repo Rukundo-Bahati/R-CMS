@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Calendar, StickyNote } from "lucide-react";
+import { Plus, Trash2, Calendar, StickyNote, ListTodo } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Note {
   id: string;
@@ -17,13 +18,14 @@ interface Note {
   content: string;
   createdAt: string;
   portal: string;
+  type: "note" | "plan";
 }
 
 export default function Notes() {
   const { user } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newNote, setNewNote] = useState({ title: "", content: "" });
+  const [newNote, setNewNote] = useState({ title: "", content: "", type: "note" as "note" | "plan" });
 
   useEffect(() => {
     if (user?.portal) {
@@ -53,52 +55,68 @@ export default function Notes() {
       content: newNote.content,
       createdAt: new Date().toISOString(),
       portal: user?.portal || "unknown",
+      type: newNote.type,
     };
 
     const updatedNotes = [note, ...notes];
     saveNotes(updatedNotes);
-    setNewNote({ title: "", content: "" });
+    setNewNote({ title: "", content: "", type: "note" });
     setIsDialogOpen(false);
-    toast.success("Note created successfully");
+    toast.success(`${newNote.type === 'plan' ? 'Plan' : 'Note'} created successfully`);
   };
 
   const handleDeleteNote = (id: string) => {
     const updatedNotes = notes.filter((note) => note.id !== id);
     saveNotes(updatedNotes);
-    toast.success("Note deleted");
+    toast.success("Item deleted");
   };
 
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Notes</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Notes & Plans</h1>
           <p className="text-muted-foreground mt-2">
-            Manage your personal notes for the {user?.portal.replace("_", " ")} portal.
+            Manage your personal notes and plans for the {user?.portal.replace("_", " ")} portal.
           </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Add Note
+              Add New
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Create New Note</DialogTitle>
+              <DialogTitle>Create New Item</DialogTitle>
               <DialogDescription>
-                Add a new note to your collection. Click save when you're done.
+                Add a new note or plan to your collection.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="type">Type</Label>
+                <Select
+                  value={newNote.type}
+                  onValueChange={(value: "note" | "plan") => setNewNote({ ...newNote, type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="note">Note</SelectItem>
+                    <SelectItem value="plan">Plan</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
                   value={newNote.title}
                   onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
-                  placeholder="Meeting notes..."
+                  placeholder={newNote.type === 'plan' ? "e.g., Q1 Goals" : "Meeting notes..."}
                 />
               </div>
               <div className="grid gap-2">
@@ -107,7 +125,7 @@ export default function Notes() {
                   id="content"
                   value={newNote.content}
                   onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
-                  placeholder="Discussed upcoming events..."
+                  placeholder={newNote.type === 'plan' ? "Outline your plan steps..." : "Discussed upcoming events..."}
                   className="min-h-[100px]"
                 />
               </div>
@@ -116,7 +134,7 @@ export default function Notes() {
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleAddNote}>Save Note</Button>
+              <Button onClick={handleAddNote}>Save</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -128,12 +146,12 @@ export default function Notes() {
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <StickyNote className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold">No notes yet</h3>
+            <h3 className="text-lg font-semibold">No items yet</h3>
             <p className="text-muted-foreground mt-2 mb-4">
-              Create your first note to keep track of important information.
+              Create your first note or plan to keep track of important information.
             </p>
             <Button onClick={() => setIsDialogOpen(true)} variant="outline">
-              Create Note
+              Create Item
             </Button>
           </div>
         </div>
@@ -151,9 +169,17 @@ export default function Notes() {
               >
                 <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg font-semibold leading-none tracking-tight">
-                      {note.title}
-                    </CardTitle>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-lg font-semibold leading-none tracking-tight">
+                        {note.title}
+                      </CardTitle>
+                      <span className={`text-[10px] px-2 py-1 rounded-full uppercase font-bold tracking-wider ${note.type === 'plan'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                        {note.type || 'NOTE'}
+                      </span>
+                    </div>
                     <CardDescription className="flex items-center gap-1 text-xs mt-1">
                       <Calendar className="w-3 h-3" />
                       {format(new Date(note.createdAt), "PPP")}

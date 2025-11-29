@@ -27,6 +27,8 @@ import Departments from "./pages/Departments";
 import Equipment from "./pages/Equipment";
 import Finance from "./pages/Finance";
 import Notes from "./pages/Notes";
+import ChoirAttendance from "./pages/choir/ChoirAttendance";
+import ChoirContribution from "./pages/choir/ChoirContribution";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -172,6 +174,24 @@ function AppRoutes() {
             element={
               <AnimatedRoute className="h-full">
                 <Notes />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/attendance"
+            element={
+              <AnimatedRoute className="h-full">
+                <ChoirAttendance />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/contribution"
+            element={
+              <AnimatedRoute className="h-full">
+                <ChoirContribution />
               </AnimatedRoute>
             }
           />
