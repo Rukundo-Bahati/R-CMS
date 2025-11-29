@@ -20,6 +20,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Calendar,
+  StickyNote,
 } from "lucide-react";
 
 interface NavItem {
@@ -69,6 +70,11 @@ const getNavItems = (portal: Portal): NavItem[] => {
           href: "/profile",
           icon: <User className="w-5 h-5" />,
         },
+        {
+          label: "Notes",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
       ];
 
     case "grand_pere_mere":
@@ -98,6 +104,11 @@ const getNavItems = (portal: Portal): NavItem[] => {
           href: "/profile",
           icon: <User className="w-5 h-5" />,
         },
+        {
+          label: "Notes",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
       ];
 
     case "accountant":
@@ -116,6 +127,11 @@ const getNavItems = (portal: Portal): NavItem[] => {
           label: "Profile",
           href: "/profile",
           icon: <User className="w-5 h-5" />,
+        },
+        {
+          label: "Notes",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
         },
       ];
 
@@ -140,6 +156,11 @@ const getNavItems = (portal: Portal): NavItem[] => {
           label: "Profile",
           href: "/profile",
           icon: <User className="w-5 h-5" />,
+        },
+        {
+          label: "Notes",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
         },
       ];
 

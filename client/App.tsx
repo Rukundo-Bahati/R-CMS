@@ -26,6 +26,7 @@ import { AnimatedRoute } from "@/components/ui/AnimatedRoute";
 import Departments from "./pages/Departments";
 import Equipment from "./pages/Equipment";
 import Finance from "./pages/Finance";
+import Notes from "./pages/Notes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,7 +63,7 @@ function ProtectedRoute() {
 
 function AppRoutes() {
   const location = useLocation();
-  
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname.split('/')[1] || 'home'}>
@@ -74,7 +75,7 @@ function AppRoutes() {
             </AnimatedRoute>
           }
         />
-        
+
         <Route
           path="/portals"
           element={
@@ -83,7 +84,7 @@ function AppRoutes() {
             </AnimatedRoute>
           }
         />
-        
+
         <Route element={<ProtectedRoute />}>
           <Route
             path="/profile"
@@ -93,7 +94,7 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-          
+
           <Route
             path="/dashboard/:portal"
             element={
@@ -102,7 +103,7 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-          
+
           <Route
             path="/dashboard/:portal/members"
             element={
@@ -111,7 +112,7 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-          
+
           <Route
             path="/dashboard/:portal/families"
             element={
@@ -165,7 +166,16 @@ function AppRoutes() {
               </AnimatedRoute>
             }
           />
-          
+
+          <Route
+            path="/dashboard/:portal/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <Notes />
+              </AnimatedRoute>
+            }
+          />
+
           <Route
             path="/dashboard/:portal/:section"
             element={
@@ -175,7 +185,7 @@ function AppRoutes() {
             }
           />
         </Route>
-        
+
         <Route
           path="*"
           element={
