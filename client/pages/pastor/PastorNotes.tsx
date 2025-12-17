@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { BookOpen, Search, Plus, Calendar, Tag, FileText, Mic, Users } from "lucide-react";
+import { BookOpen, Search, Plus, Calendar, Tag, FileText, Mic, Users, Hash, CheckCircle, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -375,120 +375,193 @@ export default function PastorNotes() {
         ))}
       </div>
 
-      {/* Add/Edit Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{editingNote ? "Edit Note" : "Add New Note"}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div>
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Enter note title"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="content">Content *</Label>
-              <Textarea
-                id="content"
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                placeholder="Enter note content"
-                rows={6}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <select
-                  id="category"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                >
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <Label htmlFor="priority">Priority</Label>
-                <select
-                  id="priority"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  value={formData.priority}
-                  onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                >
-                  {priorities.map((priority) => (
-                    <option key={priority} value={priority}>
-                      {priority}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="relatedTo">Related To</Label>
-              <Input
-                id="relatedTo"
-                value={formData.relatedTo}
-                onChange={(e) => setFormData({ ...formData, relatedTo: e.target.value })}
-                placeholder="e.g., Sunday Services, Youth Ministry"
-              />
-            </div>
-            
-            <div>
-              <Label>Tags</Label>
-              <div className="flex gap-2 mt-2">
-                <Input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  placeholder="Enter tag"
-                  onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
-                />
-                <Button type="button" onClick={handleAddTag}>
-                  Add
-                </Button>
-              </div>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {formData.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
-                  >
-                    #{tag}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(index)}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={handleCloseDialog}>
-              Cancel
-            </Button>
-            <Button onClick={handleSave}>
-              {editingNote ? "Update" : "Add"} Note
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            {/* Add/Edit Dialog */}
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30 border-0 shadow-2xl">
+                    <DialogHeader className="pb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                                <BookOpen className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    {editingNote ? "Edit Note" : "Add New Note"}
+                                </DialogTitle>
+                                <p className="text-sm text-gray-600 mt-1">Create and organize your pastoral notes</p>
+                            </div>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="space-y-6 py-4">
+                        {/* Note Content Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <FileText className="w-5 h-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-gray-800">Note Content</h3>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <Label htmlFor="title" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <BookOpen className="w-4 h-4" />
+                                        Title *
+                                    </Label>
+                                    <Input
+                                        id="title"
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        placeholder="Enter a descriptive title"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="content" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <FileText className="w-4 h-4" />
+                                        Content *
+                                    </Label>
+                                    <Textarea
+                                        id="content"
+                                        value={formData.content}
+                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                        placeholder="Write your note content here..."
+                                        rows={8}
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200 resize-none"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Organization Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Tag className="w-5 h-5 text-purple-600" />
+                                <h3 className="text-lg font-semibold text-gray-800">Organization</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <Label htmlFor="category" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Tag className="w-4 h-4" />
+                                        Category
+                                    </Label>
+                                    <select
+                                        id="category"
+                                        className="w-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.category}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    >
+                                        {categories.map((category) => (
+                                            <option key={category} value={category}>
+                                                {category}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="priority" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4" />
+                                        Priority
+                                    </Label>
+                                    <select
+                                        id="priority"
+                                        className="w-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.priority}
+                                        onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                                    >
+                                        {priorities.map((priority) => (
+                                            <option key={priority} value={priority}>
+                                                {priority}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="md:col-span-2">
+                                    <Label htmlFor="relatedTo" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Users className="w-4 h-4" />
+                                        Related To
+                                    </Label>
+                                    <Input
+                                        id="relatedTo"
+                                        value={formData.relatedTo}
+                                        onChange={(e) => setFormData({ ...formData, relatedTo: e.target.value })}
+                                        placeholder="e.g., Sunday Services, Youth Ministry, Member Name"
+                                        className="border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-purple-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tags Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Hash className="w-5 h-5 text-green-600" />
+                                <h3 className="text-lg font-semibold text-gray-800">Tags</h3>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex gap-2">
+                                    <Input
+                                        value={tagInput}
+                                        onChange={(e) => setTagInput(e.target.value)}
+                                        placeholder="Enter a tag (e.g., sermon, prayer, youth)"
+                                        onKeyPress={(e) => e.key === "Enter" && handleAddTag()}
+                                        className="border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 rounded-lg transition-all duration-200"
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={handleAddTag}
+                                        className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                                    >
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Tag
+                                    </Button>
+                                </div>
+
+                                {formData.tags.length > 0 && (
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-medium text-gray-700">Added Tags:</Label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {formData.tags.map((tag, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 rounded-full text-sm font-medium shadow-sm border border-green-200"
+                                                >
+                                                    <Hash className="w-3 h-3" />
+                                                    {tag}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveTag(index)}
+                                                        className="text-green-600 hover:text-green-800 transition-colors duration-200"
+                                                    >
+                                                        <X className="w-3 h-3" />
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    <DialogFooter className="pt-6 border-t border-gray-200 bg-gray-50/50 rounded-b-xl">
+                        <Button
+                            variant="outline"
+                            onClick={handleCloseDialog}
+                            className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSave}
+                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            {editingNote ? "Update" : "Create"} Note
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
     </div>
   );
 }

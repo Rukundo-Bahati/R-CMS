@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Users, Search, Mail, Phone, UserCheck, Plus, Mic, Calendar } from "lucide-react";
+import { Users, Search, Mail, Phone, UserCheck, Plus, Mic, Calendar, User, Building, Crown, CheckCircle } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -370,118 +370,200 @@ export default function PastorMembers() {
 
             {/* Add/Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>{editingMember ? "Edit Member" : "Add New Member"}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div>
-                            <Label htmlFor="name">Name *</Label>
-                            <Input
-                                id="name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="Enter name"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="email">Email *</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                placeholder="Enter email"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="phone">Phone *</Label>
-                            <Input
-                                id="phone"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                placeholder="+250 788 123 456"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="department">Department</Label>
-                            <select
-                                id="department"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                value={formData.department}
-                                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                            >
-                                <option value="Youth Ministry">Youth Ministry</option>
-                                <option value="Worship Team">Worship Team</option>
-                                <option value="Evangelism">Evangelism</option>
-                                <option value="Children Ministry">Children Ministry</option>
-                                <option value="Prayer Ministry">Prayer Ministry</option>
-                                <option value="Ushering">Ushering</option>
-                                <option value="Media Team">Media Team</option>
-                            </select>
-                        </div>
-                        <div>
-                            <Label htmlFor="role">Role</Label>
-                            <select
-                                id="role"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                value={formData.role}
-                                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                            >
-                                <option value="Member">Member</option>
-                                <option value="Leader">Leader</option>
-                                <option value="Coordinator">Coordinator</option>
-                                <option value="Assistant">Assistant</option>
-                            </select>
-                        </div>
-                        <div>
-                            <Label htmlFor="joinDate">Join Date</Label>
-                            <Input
-                                id="joinDate"
-                                type="date"
-                                value={formData.joinDate}
-                                onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })}
-                            />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="canPreach"
-                                checked={formData.canPreach}
-                                onChange={(e) => setFormData({ ...formData, canPreach: e.target.checked })}
-                                className="rounded"
-                            />
-                            <Label htmlFor="canPreach">Can Preach</Label>
-                        </div>
-                        {formData.canPreach && (
-                            <div>
-                                <Label htmlFor="preachingExperience">Preaching Experience</Label>
-                                <Input
-                                    id="preachingExperience"
-                                    value={formData.preachingExperience}
-                                    onChange={(e) => setFormData({ ...formData, preachingExperience: e.target.value })}
-                                    placeholder="e.g., 2 years"
-                                />
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-white via-primary/5 to-primary/10 border-0 shadow-2xl">
+                    <DialogHeader className="pb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 bg-gradient-to-r from-primary to-primary/80 rounded-xl shadow-lg">
+                                <UserCheck className="w-6 h-6 text-white" />
                             </div>
-                        )}
-                        <div>
-                            <Label htmlFor="status">Status</Label>
-                            <select
-                                id="status"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                value={formData.status}
-                                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                            >
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
+                            <div>
+                                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                                    {editingMember ? "Edit Member" : "Add New Member"}
+                                </DialogTitle>
+                                <p className="text-sm text-gray-600 mt-1">Fill in the member details below</p>
+                            </div>
+                        </div>
+                    </DialogHeader>
+
+                    <div className="space-y-6 py-4">
+                        {/* Personal Information Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <User className="w-5 h-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-gray-800">Personal Information</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <User className="w-4 h-4" />
+                                        Name *
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        placeholder="Enter full name"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Mail className="w-4 h-4" />
+                                        Email *
+                                    </Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        placeholder="member@church.com"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Phone className="w-4 h-4" />
+                                        Phone *
+                                    </Label>
+                                    <Input
+                                        id="phone"
+                                        value={formData.phone}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                        placeholder="+250 788 123 456"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="joinDate" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Calendar className="w-4 h-4" />
+                                        Join Date
+                                    </Label>
+                                    <Input
+                                        id="joinDate"
+                                        type="date"
+                                        value={formData.joinDate}
+                                        onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })}
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Ministry Information Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Building className="w-5 h-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-gray-800">Ministry Information</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="department" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Building className="w-4 h-4" />
+                                        Department
+                                    </Label>
+                                    <select
+                                        id="department"
+                                        className="w-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.department}
+                                        onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                                    >
+                                        <option value="Youth Ministry">Youth Ministry</option>
+                                        <option value="Worship Team">Worship Team</option>
+                                        <option value="Evangelism">Evangelism</option>
+                                        <option value="Children Ministry">Children Ministry</option>
+                                        <option value="Prayer Ministry">Prayer Ministry</option>
+                                        <option value="Ushering">Ushering</option>
+                                        <option value="Media Team">Media Team</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="role" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Crown className="w-4 h-4" />
+                                        Role
+                                    </Label>
+                                    <select
+                                        id="role"
+                                        className="w-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.role}
+                                        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                                    >
+                                        <option value="Member">Member</option>
+                                        <option value="Leader">Leader</option>
+                                        <option value="Coordinator">Coordinator</option>
+                                        <option value="Assistant">Assistant</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="status" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4" />
+                                        Status
+                                    </Label>
+                                    <select
+                                        id="status"
+                                        className="w-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.status}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                    >
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Preaching Capability Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Mic className="w-5 h-5 text-green-600" />
+                                <h3 className="text-lg font-semibold text-gray-800">Preaching Capability</h3>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                                    <input
+                                        type="checkbox"
+                                        id="canPreach"
+                                        checked={formData.canPreach}
+                                        onChange={(e) => setFormData({ ...formData, canPreach: e.target.checked })}
+                                        className="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                    />
+                                    <Label htmlFor="canPreach" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                        This member can preach
+                                    </Label>
+                                </div>
+                                {formData.canPreach && (
+                                    <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                                        <Label htmlFor="preachingExperience" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                            <Mic className="w-4 h-4" />
+                                            Preaching Experience
+                                        </Label>
+                                        <Input
+                                            id="preachingExperience"
+                                            value={formData.preachingExperience}
+                                            onChange={(e) => setFormData({ ...formData, preachingExperience: e.target.value })}
+                                            placeholder="e.g., 2 years, 5 sermons"
+                                            className="border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 rounded-lg transition-all duration-200"
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={handleCloseDialog}>
+
+                    <DialogFooter className="pt-6 border-t border-gray-200 bg-gray-50/50 rounded-b-xl">
+                        <Button
+                            variant="outline"
+                            onClick={handleCloseDialog}
+                            className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={handleSave}>{editingMember ? "Update" : "Add"} Member</Button>
+                        <Button
+                            onClick={handleSave}
+                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            {editingMember ? "Update" : "Add"} Member
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

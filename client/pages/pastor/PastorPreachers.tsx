@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mic, Search, Mail, Phone, UserCheck, Plus, Calendar, BookOpen } from "lucide-react";
+import { Mic, Search, Mail, Phone, UserCheck, Plus, Calendar, BookOpen, Crown, Award, GraduationCap, CheckCircle } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -333,90 +333,172 @@ export default function PastorPreachers() {
 
             {/* Add/Edit Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>{editingPreacher ? "Edit Preacher" : "Add New Preacher"}</DialogTitle>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-white via-primary/5 to-primary/10 border-0 shadow-2xl">
+                    <DialogHeader className="pb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="p-3 bg-gradient-to-r from-primary to-primary/80 rounded-xl shadow-lg">
+                                <Mic className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                                    {editingPreacher ? "Edit Preacher" : "Add New Preacher"}
+                                </DialogTitle>
+                                <p className="text-sm text-gray-600 mt-1">Manage preacher information and ministry details</p>
+                            </div>
+                        </div>
                     </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div>
-                            <Label htmlFor="name">Name *</Label>
-                            <Input
-                                id="name"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                placeholder="Enter name"
-                            />
+
+                    <div className="space-y-6 py-4">
+                        {/* Personal Information Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <UserCheck className="w-5 h-5 text-blue-600" />
+                                <h3 className="text-lg font-semibold text-gray-800">Personal Information</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <UserCheck className="w-4 h-4" />
+                                        Full Name *
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        placeholder="Enter preacher's full name"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Mail className="w-4 h-4" />
+                                        Email Address *
+                                    </Label>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        placeholder="preacher@church.com"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Phone className="w-4 h-4" />
+                                        Phone Number *
+                                    </Label>
+                                    <Input
+                                        id="phone"
+                                        value={formData.phone}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                        placeholder="+250 788 123 456"
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="lastPreached" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Calendar className="w-4 h-4" />
+                                        Last Preached
+                                    </Label>
+                                    <Input
+                                        id="lastPreached"
+                                        type="date"
+                                        value={formData.lastPreached}
+                                        onChange={(e) => setFormData({ ...formData, lastPreached: e.target.value })}
+                                        className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <Label htmlFor="email">Email *</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                placeholder="Enter email"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="phone">Phone *</Label>
-                            <Input
-                                id="phone"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                placeholder="+250 788 123 456"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="specialization">Specialization</Label>
-                            <select
-                                id="specialization"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                value={formData.specialization}
-                                onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
-                            >
-                                <option value="Evangelism">Evangelism</option>
-                                <option value="Youth Ministry">Youth Ministry</option>
-                                <option value="Biblical Teaching">Biblical Teaching</option>
-                                <option value="Worship & Prayer">Worship & Prayer</option>
-                                <option value="Pastoral Care">Pastoral Care</option>
-                            </select>
-                        </div>
-                        <div>
-                            <Label htmlFor="experience">Experience</Label>
-                            <Input
-                                id="experience"
-                                value={formData.experience}
-                                onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                                placeholder="e.g., 5 years"
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="lastPreached">Last Preached</Label>
-                            <Input
-                                id="lastPreached"
-                                type="date"
-                                value={formData.lastPreached}
-                                onChange={(e) => setFormData({ ...formData, lastPreached: e.target.value })}
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="status">Status</Label>
-                            <select
-                                id="status"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2"
-                                value={formData.status}
-                                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                            >
-                                <option value="Active">Active</option>
-                                <option value="On Leave">On Leave</option>
-                            </select>
+
+                        {/* Ministry Information Section */}
+                        <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 border border-white/50 shadow-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Crown className="w-5 h-5 text-purple-600" />
+                                <h3 className="text-lg font-semibold text-gray-800">Ministry Information</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="specialization" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <Award className="w-4 h-4" />
+                                        Specialization
+                                    </Label>
+                                    <select
+                                        id="specialization"
+                                        className="w-full border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg px-3 py-2 transition-all duration-200 bg-white"
+                                        value={formData.specialization}
+                                        onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
+                                    >
+                                        <option value="Evangelism">Evangelism</option>
+                                        <option value="Youth Ministry">Youth Ministry</option>
+                                        <option value="Biblical Teaching">Biblical Teaching</option>
+                                        <option value="Worship & Prayer">Worship & Prayer</option>
+                                        <option value="Pastoral Care">Pastoral Care</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="experience" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <GraduationCap className="w-4 h-4" />
+                                        Experience Level
+                                    </Label>
+                                    <Input
+                                        id="experience"
+                                        value={formData.experience}
+                                        onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+                                        placeholder="e.g., 5 years, Pastor"
+                                        className="border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 rounded-lg transition-all duration-200"
+                                    />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label htmlFor="status" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4" />
+                                        Current Status
+                                    </Label>
+                                    <div className="flex gap-4">
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="status"
+                                                value="Active"
+                                                checked={formData.status === "Active"}
+                                                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                                className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500"
+                                            />
+                                            <span className="text-sm font-medium text-gray-700">Active</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="status"
+                                                value="On Leave"
+                                                checked={formData.status === "On Leave"}
+                                                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                                className="w-4 h-4 text-yellow-600 bg-gray-100 border-gray-300 focus:ring-yellow-500"
+                                            />
+                                            <span className="text-sm font-medium text-gray-700">On Leave</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={handleCloseDialog}>
+
+                    <DialogFooter className="pt-6 border-t border-gray-200 bg-gray-50/50 rounded-b-xl">
+                        <Button
+                            variant="outline"
+                            onClick={handleCloseDialog}
+                            className="border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={handleSave}>{editingPreacher ? "Update" : "Add"} Preacher</Button>
+                        <Button
+                            onClick={handleSave}
+                            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                        >
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            {editingPreacher ? "Update" : "Add"} Preacher
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
