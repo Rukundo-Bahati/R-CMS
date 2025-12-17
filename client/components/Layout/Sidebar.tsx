@@ -21,6 +21,8 @@ import {
   ChevronRight,
   Calendar,
   StickyNote,
+  Mic,
+  BookOpen,
 } from "lucide-react";
 
 interface NavItem {
@@ -228,6 +230,45 @@ const getNavItems = (portal: Portal): NavItem[] => {
           label: "Members",
           href: `${baseHref}/members`,
           icon: <Users className="w-5 h-5" />,
+        },
+        {
+          label: "Notes & Plans",
+          href: `${baseHref}/notes`,
+          icon: <StickyNote className="w-5 h-5" />,
+        },
+        {
+          label: "Profile",
+          href: "/profile",
+          icon: <User className="w-5 h-5" />,
+        }
+      ];
+
+    case "pastor":
+      return [
+        {
+          label: "Dashboard",
+          href: `${baseHref}`,
+          icon: <LayoutDashboard className="w-5 h-5" />,
+        },
+        {
+          label: "Preachers",
+          href: `${baseHref}/preachers`,
+          icon: <Mic className="w-5 h-5" />,
+        },
+        {
+          label: "Schedule",
+          href: `${baseHref}/schedule`,
+          icon: <Calendar className="w-5 h-5" />,
+        },
+        {
+          label: "Members",
+          href: `${baseHref}/members`,
+          icon: <Users className="w-5 h-5" />,
+        },
+        {
+          label: "Events",
+          href: `${baseHref}/events`,
+          icon: <BookOpen className="w-5 h-5" />,
         },
         {
           label: "Notes & Plans",

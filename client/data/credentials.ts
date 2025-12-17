@@ -54,7 +54,7 @@ export const credentials: CredentialRecord[] = [
     email: "pastor@church.com",
     password: "Pastor@123",
     role: "pastor",
-    name: "Senior Pastor",
+    name: "Pastor",
   },
 ];
 

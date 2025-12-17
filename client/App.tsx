@@ -36,6 +36,11 @@ import UsherNotes from "./pages/usher/UsherNotes";
 import IntercessorMembers from "./pages/intercessors/IntercessorMembers";
 import IntercessorSchedule from "./pages/intercessors/IntercessorSchedule";
 import IntercessorNotes from "./pages/intercessors/IntercessorNotes";
+import PastorPreachers from "./pages/pastor/PastorPreachers";
+import PastorSchedule from "./pages/pastor/PastorSchedule";
+import PastorMembers from "./pages/pastor/PastorMembers";
+import PastorEvents from "./pages/pastor/PastorEvents";
+import PastorNotes from "./pages/pastor/PastorNotes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -264,6 +269,52 @@ function AppRoutes() {
             element={
               <AnimatedRoute className="h-full">
                 <IntercessorNotes />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Pastor Routes */}
+          <Route
+            path="/dashboard/pastor/preachers"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorPreachers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/events"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorEvents />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorNotes />
               </AnimatedRoute>
             }
           />

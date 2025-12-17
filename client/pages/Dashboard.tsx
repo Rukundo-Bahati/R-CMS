@@ -5,6 +5,7 @@ import ChoirDashboard from "./dashboards/ChoirDashboard";
 import DefaultDashboard from "./dashboards/DefaultDashboard";
 import UsherDashboard from "./dashboards/UsherDashboard";
 import IntercessorDashboard from "./dashboards/IntercessorDashboard";
+import PastorDashboard from "./dashboards/PastorDashboard";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -26,6 +27,8 @@ export default function Dashboard() {
       return <UsherDashboard />;
     case "intercessors":
       return <IntercessorDashboard />;
+    case "pastor":
+      return <PastorDashboard />;
 
     default:
       return <DefaultDashboard />;
