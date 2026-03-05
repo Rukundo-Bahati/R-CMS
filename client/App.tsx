@@ -1,0 +1,653 @@
+import "./global.css";
+
+import { Toaster } from "@/components/ui/toaster";
+import { createRoot } from "react-dom/client";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { SidebarProvider } from "@/contexts/SidebarContext";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { Outlet, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
+import LoginPage from "./pages/auth/LoginPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import PortalSelection from "./pages/PortalSelection";
+import Dashboard from "./pages/Dashboard";
+import Members from "./pages/Members";
+import Families from "./pages/Families";
+import Committee from "./pages/Committee";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
+import Schedule from "./pages/Schedule";
+import Placeholder from "./pages/Placeholder";
+import NotFound from "./pages/NotFound";
+import { AnimatedRoute } from "@/components/ui/AnimatedRoute";
+import Departments from "./pages/Departments";
+import Equipment from "./pages/Equipment";
+import Finance from "./pages/Finance";
+import Notes from "./pages/Notes";
+import Assignments from "./pages/Assignments";
+import ChoirAttendance from "./pages/choir/ChoirAttendance";
+import ChoirContribution from "./pages/choir/ChoirContribution";
+import UsherMembers from "./pages/usher/UsherMembers";
+import UsherAttendance from "./pages/usher/UsherAttendance";
+import UsherSchedule from "./pages/usher/UsherSchedule";
+import UsherNotes from "./pages/usher/UsherNotes";
+import IntercessorMembers from "./pages/intercessors/IntercessorMembers";
+import IntercessorSchedule from "./pages/intercessors/IntercessorSchedule";
+import IntercessorNotes from "./pages/intercessors/IntercessorNotes";
+import PastorPreachers from "./pages/pastor/PastorPreachers";
+import PastorSchedule from "./pages/pastor/PastorSchedule";
+import PastorMembers from "./pages/pastor/PastorMembers";
+import PastorEvents from "./pages/pastor/PastorEvents";
+import PastorNotes from "./pages/pastor/PastorNotes";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
+
+function ProtectedRoute() {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  if (!user) {
+    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="h-full"
+    >
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    </motion.div>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname.split('/')[1] || 'home'}>
+        <Route
+          path="/auth/login"
+          element={
+            <AnimatedRoute>
+              <LoginPage />
+            </AnimatedRoute>
+          }
+        />
+
+        <Route
+          path="/auth/forgot-password"
+          element={
+            <AnimatedRoute>
+              <ForgotPasswordPage />
+            </AnimatedRoute>
+          }
+        />
+
+        <Route
+          path="/auth/reset-password"
+          element={
+            <AnimatedRoute>
+              <ResetPasswordPage />
+            </AnimatedRoute>
+          }
+        />
+
+        <Route
+          path="/"
+          element={<Navigate to="/auth/login" replace />}
+        />
+
+        <Route
+          path="/portals"
+          element={
+            <AnimatedRoute>
+              <PortalSelection />
+            </AnimatedRoute>
+          }
+        />
+
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/profile"
+            element={
+              <AnimatedRoute>
+                <Profile />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal"
+            element={
+              <AnimatedRoute className="h-full">
+                <Dashboard />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboards/:portal"
+            element={
+              <AnimatedRoute className="h-full">
+                <Dashboard />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <Members />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/families"
+            element={
+              <AnimatedRoute className="h-full">
+                <Families />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/committee"
+            element={
+              <AnimatedRoute className="h-full">
+                <Committee />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/departments"
+            element={
+              <AnimatedRoute className="h-full">
+                <Departments />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/equipment"
+            element={
+              <AnimatedRoute className="h-full">
+                <Equipment />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <Schedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/finance"
+            element={
+              <AnimatedRoute className="h-full">
+                <Finance />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <Notes />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/:portal/assignments"
+            element={
+              <AnimatedRoute className="h-full">
+                <Assignments />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/attendance"
+            element={
+              <AnimatedRoute className="h-full">
+                <ChoirAttendance />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/contribution"
+            element={
+              <AnimatedRoute className="h-full">
+                <ChoirContribution />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Usher Routes */}
+          <Route
+            path="/dashboard/ushers/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/attendance"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherAttendance />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/ushers/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <UsherNotes />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Intercessor Routes */}
+          <Route
+            path="/dashboard/intercessors/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/intercessors/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/intercessors/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <IntercessorNotes />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          {/* Pastor Routes */}
+          <Route
+            path="/dashboard/pastor/preachers"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorPreachers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/schedule"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorSchedule />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/members"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorMembers />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/events"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorEvents />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/pastor/notes"
+            element={
+              <AnimatedRoute className="h-full">
+                <PastorNotes />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/:section"
+            element={
+              <AnimatedRoute className="h-full">
+                <Placeholder />
+              </AnimatedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:portal/messages"
+            element={
+              <AnimatedRoute className="h-full">
+                <Messages />
+              </AnimatedRoute>
+            }
+          />
+        </Route>
+
+        <Route
+          path="*"
+          element={
+            <AnimatedRoute>
+              <NotFound />
+            </AnimatedRoute>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <SidebarProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </TooltipProvider>
+          </SidebarProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+createRoot(document.getElementById("root")!).render(<App />);

@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist/spa",
+  "installCommand": "pnpm install"
+}
