@@ -326,6 +326,35 @@ const getNavItems = (portal: Portal): NavItem[] => {
         }
       ];
 
+    case "admin":
+      return [
+        {
+          label: "Dashboard",
+          href: `${baseHref}`,
+          icon: <LayoutDashboard className="w-5 h-5" />,
+        },
+        {
+          label: "Members",
+          href: `${baseHref}/members`,
+          icon: <Users className="w-5 h-5" />,
+        },
+        {
+          label: "Committee",
+          href: `${baseHref}/committee`,
+          icon: <Users2 className="w-5 h-5" />,
+        },
+        {
+          label: "Messaging",
+          href: `${baseHref}/messages`,
+          icon: <Mail className="w-5 h-5" />,
+        },
+        {
+          label: "Profile",
+          href: "/profile",
+          icon: <User className="w-5 h-5" />,
+        }
+      ];
+
     default:
       return [
         {

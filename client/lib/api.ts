@@ -124,5 +124,10 @@ export const api = {
         getRecipients: (portal?: string, department?: string) =>
             api.get(`/messages/recipients?${portal ? `portal=${portal}` : ''}${department ? `&department=${department}` : ''}`),
         send: (data: any) => api.post('/messages/send', data),
+        getAll: (params: { portal?: string; status?: string; email?: string }) => {
+            const query = new URLSearchParams(params as any).toString();
+            return api.get(`/messages?${query}`);
+        },
+        saveDraft: (data: any) => api.post('/messages/draft', data),
     }
 };

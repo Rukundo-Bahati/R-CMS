@@ -178,7 +178,7 @@ const ActivityItem = ({ title, time, type }: { title: string; time: string; type
       case 'report':
         return <AlertCircle className="w-5 h-5 text-yellow-500" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-500" />;
+        return <Clock className="w-5 h-5 text-muted-foreground" />;
     }
   };
 
@@ -334,7 +334,7 @@ export default function GrandPereMereDashboard() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
                   axisLine={false}
                   tickLine={false}
                   angle={-45}
@@ -342,7 +342,7 @@ export default function GrandPereMereDashboard() {
                   height={60}
                 />
                 <YAxis
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -360,9 +360,9 @@ export default function GrandPereMereDashboard() {
                 <Line
                   type="monotone"
                   dataKey="value"
-                  stroke="#180e42"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={3}
-                  dot={{ fill: '#180e42', strokeWidth: 2, r: 6 }}
+                  dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -404,13 +404,13 @@ export default function GrandPereMereDashboard() {
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#180e42' }}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
                   height={50}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: '#180e42' }}
+                  tick={{ fontSize: 12, fill: 'hsl(var(--foreground))' }}
                 />
                 <Tooltip
                   contentStyle={{
@@ -423,7 +423,7 @@ export default function GrandPereMereDashboard() {
                 />
                 <Legend />
                 <Bar dataKey="boys" fill="#4f46e5" name="Boys" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="girls" fill="#ec4899" name="Girls" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="girls" fill="#14b8a6" name="Girls" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -501,11 +501,11 @@ export default function GrandPereMereDashboard() {
         </Card>
       </div>
 
-      {/* Student Distribution */}
+      {/* member Distribution */}
       <Card className="p-6 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Student Distribution</h3>
+            <h3 className="text-lg font-semibold text-foreground">member Distribution</h3>
             <p className="text-sm text-muted-foreground">Breakdown by year level</p>
           </div>
           <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/5">
@@ -514,9 +514,9 @@ export default function GrandPereMereDashboard() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
-            { title: 'Y1 Students', value: totalY1, color: 'bg-primary/20', progressColor: 'bg-primary/80', textColor: 'text-primary' },
-            { title: 'Y2 Students', value: totalY2, color: 'bg-primary/10', progressColor: 'bg-primary/60', textColor: 'text-primary/90' },
-            { title: 'Y3 Students', value: totalY3, color: 'bg-primary/5', progressColor: 'bg-primary/40', textColor: 'text-primary/80' },
+            { title: 'Y1 members', value: totalY1, color: 'bg-primary/20', progressColor: 'bg-primary/80', textColor: 'text-foreground' },
+            { title: 'Y2 members', value: totalY2, color: 'bg-primary/10', progressColor: 'bg-primary/60', textColor: 'text-foreground/90' },
+            { title: 'Y3 members', value: totalY3, color: 'bg-primary/5', progressColor: 'bg-primary/40', textColor: 'text-foreground/80' },
           ].map((item, index) => (
             <div key={index} className="bg-card p-5 rounded-lg border border-border hover:shadow-sm transition-shadow">
               <div className="flex items-center justify-between mb-3">
@@ -525,7 +525,7 @@ export default function GrandPereMereDashboard() {
               </div>
               <div className="flex items-baseline">
                 <span className="text-2xl font-bold text-foreground">{item.value}</span>
-                <span className="ml-2 text-sm text-muted-foreground">students</span>
+                <span className="ml-2 text-sm text-muted-foreground">members</span>
               </div>
               <div className="mt-4">
                 <div className="w-full bg-muted rounded-full h-2 overflow-hidden">

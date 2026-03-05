@@ -8,7 +8,8 @@ export type Portal =
   | "ushers"
   | "intercessors"
   | "pastor"
-  | "accountant";
+  | "accountant"
+  | "admin";
 
 export interface User {
   id: string;
@@ -20,7 +21,7 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
@@ -45,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('auth_token', res.token);
     localStorage.setItem('user', JSON.stringify(res.user));
     setUser(res.user);
+    return res.user as User;
   };
 
   const logout = () => {

@@ -216,7 +216,7 @@ const MemberDialog: React.FC<MemberDialogProps> = ({
             </div>
             <div className="space-y-2">
               <Label htmlFor="year">Year</Label>
-              <Input id="year" name="year" value={formData.year} onChange={handleChange} disabled={mode === 'view'} />
+              <Input id="year" name="year" placeholder="e.g., 2024-2027" value={formData.year} onChange={handleChange} disabled={mode === 'view'} />
             </div>
             {portal === 'choir' ? (
               <ChoirMemberForm formData={formData as any} onChange={handleChange} mode={mode} />
@@ -296,7 +296,7 @@ export default function Members() {
     if (debouncedSearchTerm) {
       const searchLower = debouncedSearchTerm.toLowerCase();
       result = result.filter((member) => {
-        const familyName = families.find(f => f.id === member.family_id)?.name || '';
+        const familyName = families.find(f => f.id.toString() === (member.family_id || member.familyId)?.toString())?.name || '';
         return (
           member.name.toLowerCase().includes(searchLower) ||
           member.email.toLowerCase().includes(searchLower) ||
@@ -311,8 +311,8 @@ export default function Members() {
         let bValue = (b as any)[sortConfig.key];
 
         if (sortConfig.key === 'familyId' as any) {
-          aValue = families.find(f => f.id === a.family_id)?.name || '';
-          bValue = families.find(f => f.id === b.family_id)?.name || '';
+          aValue = families.find(f => f.id.toString() === (a.family_id || a.familyId)?.toString())?.name || '';
+          bValue = families.find(f => f.id.toString() === (b.family_id || b.familyId)?.toString())?.name || '';
         }
 
         if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -509,11 +509,11 @@ export default function Members() {
                   <TableCell>{member.email}</TableCell>
                   <TableCell>
                     {user?.portal === 'choir' ? (
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${member.isCommittee
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${member.is_committee
                         ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
                         : "bg-muted text-muted-foreground"
                         }`}>
-                        {member.isCommittee ? "Yes" : "No"}
+                        {member.is_committee ? "Yes" : "No"}
                       </span>
                     ) : (
                       member.department
@@ -524,7 +524,7 @@ export default function Members() {
                     {user?.portal === 'choir' ? (
                       member.voice || '-'
                     ) : (
-                      initialFamilies.find(f => f.id === member.familyId)?.name || '-'
+                      families.find(f => f.id.toString() === (member.family_id || member.familyId)?.toString())?.name || '-'
                     )}
                   </TableCell>
                   <TableCell>

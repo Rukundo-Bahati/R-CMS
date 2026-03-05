@@ -20,8 +20,12 @@ export default function LoginPage() {
         setLoading(true);
         setError('');
         try {
-            await login(email, password);
-            navigate('/dashboard/grand-pere-mere');
+            const user = await login(email, password);
+            if (user.portal === 'admin') {
+                navigate('/dashboard/admin');
+            } else {
+                navigate(`/dashboard/${user.portal}`);
+            }
         } catch (err: any) {
             setError(err.message || 'Login failed');
         } finally {
@@ -47,20 +51,20 @@ export default function LoginPage() {
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm">
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 text-red-700 dark:text-red-400 text-sm">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 ml-1">Email Address</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
                         <div className="relative group">
                             <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400 group-focus-within:text-indigo-600 transition-colors" />
                             <input
                                 type="email"
                                 required
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-muted/50 border border-gray-200 dark:border-border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-foreground"
                                 placeholder="name@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +74,7 @@ export default function LoginPage() {
 
                     <div className="space-y-2">
                         <div className="flex justify-between items-center ml-1">
-                            <label className="text-sm font-semibold text-gray-700">Password</label>
+                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Password</label>
                             <Link to="/auth/forgot-password" title="Forgot password" id="forgot-password" className="text-xs font-semibold text-indigo-600 hover:text-indigo-500">
                                 Forgot password?
                             </Link>
@@ -80,7 +84,7 @@ export default function LoginPage() {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 required
-                                className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                                className="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-muted/50 border border-gray-200 dark:border-border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-foreground"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -98,7 +102,7 @@ export default function LoginPage() {
                     <Button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg shadow-lg shadow-indigo-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full py-6 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg shadow-lg dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
                         {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                             <span className="flex items-center gap-2">

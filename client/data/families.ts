@@ -15,6 +15,12 @@ export interface Family {
   pere?: FamilyMember;
   mere?: FamilyMember;
   members: FamilyMember[];
+  total_members?: number | string;
+  total_boys?: number | string;
+  total_girls?: number | string;
+  total_y1?: number | string;
+  total_y2?: number | string;
+  total_y3?: number | string;
 }
 
 export const initialFamilies: Family[] = [

@@ -342,7 +342,7 @@ export default function Committee() {
 
   const SortableHeader = ({ columnKey, children }: { columnKey: keyof Committee; children: React.ReactNode }) => (
     <TableHead
-      className="cursor-pointer hover:bg-gray-50 transition-colors"
+      className="cursor-pointer hover:bg-muted transition-colors"
       onClick={() => requestSort(columnKey)}
     >
       <div className="flex items-center">
@@ -398,8 +398,8 @@ export default function Committee() {
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Committee</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Committee</h1>
+          <p className="text-muted-foreground mt-1">
             Manage and view all committee members
           </p>
         </div>
@@ -420,7 +420,7 @@ export default function Committee() {
       <div className="flex flex-col md:flex-row gap-4 mb-8 items-start md:items-center">
         <div className="relative w-full max-w-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
+            <Search className="h-4 w-4 text-muted-foreground" />
           </div>
           <Input
             placeholder="Search committee members..."
@@ -432,7 +432,7 @@ export default function Committee() {
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
               <button
                 onClick={() => setSearchTerm('')}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -457,9 +457,9 @@ export default function Committee() {
       </div>
 
       {currentCommittees.length > 0 ? (
-        <div className="rounded-md border bg-white">
+        <div className="rounded-md border bg-card text-card-foreground">
           <Table>
-            <TableHeader className="bg-gray-50">
+            <TableHeader className="bg-muted/50">
               <TableRow>
                 <SortableHeader columnKey="name">Committee Member</SortableHeader>
                 <SortableHeader columnKey="email">Email</SortableHeader>
@@ -480,8 +480,8 @@ export default function Committee() {
                   <TableCell>{committee.department}</TableCell>
                   <TableCell>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${committee.status === "active"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
+                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                      : "bg-muted text-muted-foreground"
                       }`}>
                       {committee.status === "active" ? "Active" : "Inactive"}
                     </span>
@@ -516,13 +516,13 @@ export default function Committee() {
         </div>
       ) : (
         <Card className="text-center py-12">
-          <p className="text-gray-600">No committee members found for {selectedYear}</p>
+          <p className="text-muted-foreground">No committee members found for {selectedYear}</p>
         </Card>
       )}
 
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-muted-foreground">
             Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, sortedAndFilteredCommittees.length)} of {sortedAndFilteredCommittees.length} members
           </div>
           <div className="flex items-center space-x-2">

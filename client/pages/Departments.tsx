@@ -477,7 +477,7 @@ export default function Departments() {
 
   const SortableHeader = ({ columnKey, children }: { columnKey: keyof Department; children: React.ReactNode }) => (
     <TableHead
-      className="cursor-pointer hover:bg-gray-50 transition-colors"
+      className="cursor-pointer hover:bg-muted transition-colors"
       onClick={() => requestSort(columnKey)}
     >
       <div className="flex items-center">
@@ -556,41 +556,41 @@ export default function Departments() {
     <div className="max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Departments</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-foreground">Departments</h1>
+          <p className="text-muted-foreground mt-1">
             Manage and view all church departments
           </p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Department
-          </Button>
-        </DialogTrigger>
-        <DepartmentDialog
-          department={null}
-          isOpen={isAddOpen}
-          onClose={() => setIsAddOpen(false)}
-          onSave={handleAddDepartment}
-          mode="edit"
-        />
-      </Dialog>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add Department
+            </Button>
+          </DialogTrigger>
+          <DepartmentDialog
+            department={null}
+            isOpen={isAddOpen}
+            onClose={() => setIsAddOpen(false)}
+            onSave={handleAddDepartment}
+            mode="edit"
+          />
+        </Dialog>
 
-      {/* Department View/Edit Dialog */}
-      <DepartmentDialog
-        department={selectedDepartment}
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onSave={handleUpdateDepartment}
-        mode={dialogMode}
-      />
+        {/* Department View/Edit Dialog */}
+        <DepartmentDialog
+          department={selectedDepartment}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSave={handleUpdateDepartment}
+          mode={dialogMode}
+        />
       </div>
 
       <div className="mb-8">
         <div className="relative w-full max-w-md">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
+            <Search className="h-4 w-4 text-muted-foreground" />
           </div>
           <Input
             placeholder="Search departments..."
@@ -602,7 +602,7 @@ export default function Departments() {
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
               <button
                 onClick={() => setSearchTerm('')}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-muted-foreground hover:text-foreground"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
@@ -619,93 +619,92 @@ export default function Departments() {
 
       {currentDepartments.length > 0 ? (
         <div className="rounded-md border">
-        <Table>
-          <TableHeader className="bg-gray-50">
-            <TableRow>
-              <SortableHeader columnKey="name">Department</SortableHeader>
-              <SortableHeader columnKey="leader">Leader</SortableHeader>
-              <SortableHeader columnKey="memberCount">Members</SortableHeader>
-              <SortableHeader columnKey="status">Status</SortableHeader>
-              <TableHead className="w-[80px] text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentDepartments.map((department) => (
-              <TableRow key={department.id}>
-                <TableCell className="font-medium">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-4 h-4 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: department.color }}
-                    />
-                    <div>
-                      <p className="font-medium text-gray-900">{department.name}</p>
-                      <p className="text-sm text-gray-500 line-clamp-1">{department.description}</p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>{department.leader}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4 text-gray-400" />
-                    <span>{department.memberCount}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    department.status === "active"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}>
-                    {department.status === "active" ? "Active" : "Inactive"}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => openDepartmentDialog(department, 'view')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        <span>View Details</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => openDepartmentDialog(department, 'edit')}
-                      >
-                        <Edit className="mr-2 h-4 w-4" />
-                        <span>Edit Department</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer text-red-600"
-                        onClick={() => handleDeleteDepartment(department.id, department.name)}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Remove Department</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+          <Table>
+            <TableHeader className="bg-muted/50">
+              <TableRow>
+                <SortableHeader columnKey="name">Department</SortableHeader>
+                <SortableHeader columnKey="leader">Leader</SortableHeader>
+                <SortableHeader columnKey="memberCount">Members</SortableHeader>
+                <SortableHeader columnKey="status">Status</SortableHeader>
+                <TableHead className="w-[80px] text-right">Action</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {currentDepartments.map((department) => (
+                <TableRow key={department.id}>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-4 h-4 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: department.color }}
+                      />
+                      <div>
+                        <p className="font-medium text-foreground">{department.name}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-1">{department.description}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{department.leader}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4 text-muted-foreground" />
+                      <span>{department.memberCount}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${department.status === "active"
+                        ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                        : "bg-muted text-muted-foreground"
+                      }`}>
+                      {department.status === "active" ? "Active" : "Inactive"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openDepartmentDialog(department, 'view')}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          <span>View Details</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => openDepartmentDialog(department, 'edit')}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          <span>Edit Department</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600"
+                          onClick={() => handleDeleteDepartment(department.id, department.name)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Remove Department</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       ) : (
         <Card className="text-center py-12">
-          <p className="text-gray-600">No departments found matching your search</p>
+          <p className="text-muted-foreground">No departments found matching your search</p>
         </Card>
       )}
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           Showing {Math.min(startIndex + 1, sortedAndFilteredDepartments.length)} to {Math.min(startIndex + currentDepartments.length, sortedAndFilteredDepartments.length)} of {sortedAndFilteredDepartments.length} departments
         </div>
         <div className="flex items-center space-x-2">

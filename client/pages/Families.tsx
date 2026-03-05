@@ -34,17 +34,18 @@ export default function Families() {
   const [loading, setLoading] = useState(true);
   const [selectedFamily, setSelectedFamily] = useState<Family | null>(null);
   const [isAddFamilyOpen, setIsAddFamilyOpen] = useState(false);
+  const [isEditFamilyOpen, setIsEditFamilyOpen] = useState(false);
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
   const [addFamilyStep, setAddFamilyStep] = useState(1);
-  const [newFamilyData, setNewFamilyData] = useState({
+  const [newFamilyData, setNewFamilyData] = useState<any>({
     name: "",
     generation: "",
-    total_members: 0,
-    total_boys: 0,
-    total_girls: 0,
-    total_y1: 0,
-    total_y2: 0,
-    total_y3: 0,
+    total_members: "",
+    total_boys: "",
+    total_girls: "",
+    total_y1: "",
+    total_y2: "",
+    total_y3: "",
     pere: { name: "", email: "", phone: "" },
     mere: { name: "", email: "", phone: "" },
   });
@@ -79,14 +80,80 @@ export default function Families() {
 
   const calculateStats = (family: Family) => {
     const members = family.members || [];
-    const totalMembers = members.length;
-    const totalBoys = members.filter((m) => m.gender === "M").length;
-    const totalGirls = members.filter((m) => m.gender === "F").length;
-    const totalY1 = members.filter((m) => m.class === "Y1").length;
-    const totalY2 = members.filter((m) => m.class === "Y2").length;
-    const totalY3 = members.filter((m) => m.class === "Y3").length;
+
+    // Parse manual counts from the family object (manually entered in form)
+    const manualTotal = parseInt(family.total_members?.toString() || "0", 10);
+    const manualBoys = parseInt(family.total_boys?.toString() || "0", 10);
+    const manualGirls = parseInt(family.total_girls?.toString() || "0", 10);
+    const manualY1 = parseInt(family.total_y1?.toString() || "0", 10);
+    const manualY2 = parseInt(family.total_y2?.toString() || "0", 10);
+    const manualY3 = parseInt(family.total_y3?.toString() || "0", 10);
+
+    // Use the manual count as primary, or fallback to length of members array
+    const totalMembers = Math.max(manualTotal, members.length);
+    const totalBoys = Math.max(manualBoys, members.filter((m) => m.gender === "M").length);
+    const totalGirls = Math.max(manualGirls, members.filter((m) => m.gender === "F").length);
+    const totalY1 = Math.max(manualY1, members.filter((m) => m.class === "Y1").length);
+    const totalY2 = Math.max(manualY2, members.filter((m) => m.class === "Y2").length);
+    const totalY3 = Math.max(manualY3, members.filter((m) => m.class === "Y3").length);
 
     return { totalMembers, totalBoys, totalGirls, totalY1, totalY2, totalY3 };
+  };
+
+  const allMembersList = families.flatMap(f => f.members || [])
+    .concat(families.map(f => f.pere as any).filter(Boolean))
+    .concat(families.map(f => f.mere as any).filter(Boolean));
+
+  const handleFamilyNumberChange = (field: string, val: string, isEditing = false) => {
+    const num = val === '' ? '' : parseInt(val, 10);
+    const targetData = isEditing ? selectedFamily as any : newFamilyData;
+    const newData = { ...targetData, [field]: num };
+
+    // Auto-calculate boys/girls
+    if (field === 'total_members' && typeof num === 'number') {
+      if (typeof newData.total_boys === 'number' && newData.total_boys > 0) {
+        newData.total_girls = Math.max(0, num - newData.total_boys);
+      } else if (typeof newData.total_girls === 'number' && newData.total_girls > 0) {
+        newData.total_boys = Math.max(0, num - newData.total_girls);
+      }
+    } else if (field === 'total_boys' && typeof num === 'number' && typeof newData.total_members === 'number') {
+      newData.total_girls = Math.max(0, newData.total_members - num);
+    } else if (field === 'total_girls' && typeof num === 'number' && typeof newData.total_members === 'number') {
+      newData.total_boys = Math.max(0, newData.total_members - num);
+    }
+
+    // Auto-calculate y1/y2/y3 based on estimated students (members minus parents)
+    if (typeof newData.total_members === 'number') {
+      const parentCount = (newData.pere?.name ? 1 : 0) + (newData.mere?.name ? 1 : 0) || 2;
+      const estimatedStudents = Math.max(0, newData.total_members - parentCount);
+
+      if (field === 'total_y1' && typeof num === 'number' && typeof newData.total_y2 === 'number') {
+        newData.total_y3 = Math.max(0, estimatedStudents - num - newData.total_y2);
+      } else if (field === 'total_y2' && typeof num === 'number' && typeof newData.total_y1 === 'number') {
+        newData.total_y3 = Math.max(0, estimatedStudents - num - newData.total_y1);
+      } else if (field === 'total_y3' && typeof num === 'number' && typeof newData.total_y1 === 'number') {
+        newData.total_y2 = Math.max(0, estimatedStudents - num - newData.total_y1);
+      }
+    }
+
+    if (isEditing) {
+      setSelectedFamily(newData);
+    } else {
+      setNewFamilyData(newData);
+    }
+  };
+
+  const handleUpdateFamily = async () => {
+    if (!selectedFamily?.name.trim()) return;
+    try {
+      await api.grandparents.update(selectedFamily.id, selectedFamily);
+      setIsEditFamilyOpen(false);
+      fetchFamilies();
+      toast.success("Family updated successfully");
+    } catch (error) {
+      console.error('Error updating family:', error);
+      toast.error("Failed to update family");
+    }
   };
 
   const handleAddFamily = async () => {
@@ -101,12 +168,12 @@ export default function Families() {
       setNewFamilyData({
         name: "",
         generation: "",
-        total_members: 0,
-        total_boys: 0,
-        total_girls: 0,
-        total_y1: 0,
-        total_y2: 0,
-        total_y3: 0,
+        total_members: "",
+        total_boys: "",
+        total_girls: "",
+        total_y1: "",
+        total_y2: "",
+        total_y3: "",
         pere: { name: "", email: "", phone: "" },
         mere: { name: "", email: "", phone: "" },
       });
@@ -215,19 +282,13 @@ export default function Families() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="generation">Generation</Label>
-                    <select
+                    <Label htmlFor="generation">Generation (Optional) </Label>
+                    <Input
                       id="generation"
+                      placeholder="e.g., 2nd Generation"
                       value={newFamilyData.generation}
                       onChange={(e) => setNewFamilyData({ ...newFamilyData, generation: e.target.value })}
-                      className="w-full h-10 px-3 rounded-md border border-input bg-background"
-                    >
-                      <option value="">Select Generation</option>
-                      <option value="1st">1st Generation</option>
-                      <option value="2nd">2nd Generation</option>
-                      <option value="3rd">3rd Generation</option>
-                      <option value="4th">4th Generation</option>
-                    </select>
+                    />
                   </div>
                 </div>
               )}
@@ -242,7 +303,7 @@ export default function Families() {
                         type="number"
                         min="0"
                         value={newFamilyData.total_members}
-                        onChange={(e) => setNewFamilyData({ ...newFamilyData, total_members: parseInt(e.target.value) || 0 })}
+                        onChange={(e) => handleFamilyNumberChange('total_members', e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -252,7 +313,7 @@ export default function Families() {
                         type="number"
                         min="0"
                         value={newFamilyData.total_boys}
-                        onChange={(e) => setNewFamilyData({ ...newFamilyData, total_boys: parseInt(e.target.value) || 0 })}
+                        onChange={(e) => handleFamilyNumberChange('total_boys', e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -262,7 +323,7 @@ export default function Families() {
                         type="number"
                         min="0"
                         value={newFamilyData.total_girls}
-                        onChange={(e) => setNewFamilyData({ ...newFamilyData, total_girls: parseInt(e.target.value) || 0 })}
+                        onChange={(e) => handleFamilyNumberChange('total_girls', e.target.value)}
                       />
                     </div>
                     <div className="grid grid-cols-3 gap-2 col-span-2">
@@ -273,7 +334,7 @@ export default function Families() {
                           type="number"
                           min="0"
                           value={newFamilyData.total_y1}
-                          onChange={(e) => setNewFamilyData({ ...newFamilyData, total_y1: parseInt(e.target.value) || 0 })}
+                          onChange={(e) => handleFamilyNumberChange('total_y1', e.target.value)}
                         />
                       </div>
                       <div className="space-y-2">
@@ -283,7 +344,7 @@ export default function Families() {
                           type="number"
                           min="0"
                           value={newFamilyData.total_y2}
-                          onChange={(e) => setNewFamilyData({ ...newFamilyData, total_y2: parseInt(e.target.value) || 0 })}
+                          onChange={(e) => handleFamilyNumberChange('total_y2', e.target.value)}
                         />
                       </div>
                       <div className="space-y-2">
@@ -293,7 +354,7 @@ export default function Families() {
                           type="number"
                           min="0"
                           value={newFamilyData.total_y3}
-                          onChange={(e) => setNewFamilyData({ ...newFamilyData, total_y3: parseInt(e.target.value) || 0 })}
+                          onChange={(e) => handleFamilyNumberChange('total_y3', e.target.value)}
                         />
                       </div>
                     </div>
@@ -310,10 +371,18 @@ export default function Families() {
                         <Input
                           placeholder="Full Name"
                           value={newFamilyData.pere.name}
-                          onChange={(e) => setNewFamilyData({
-                            ...newFamilyData,
-                            pere: { ...newFamilyData.pere, name: e.target.value }
-                          })}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const match = allMembersList.find(m => m.name.toLowerCase() === val.toLowerCase());
+                            setNewFamilyData({
+                              ...newFamilyData,
+                              pere: {
+                                name: val,
+                                email: match && !newFamilyData.pere.email ? match.email : newFamilyData.pere.email,
+                                phone: match && !newFamilyData.pere.phone ? match.phone : newFamilyData.pere.phone
+                              }
+                            });
+                          }}
                         />
                       </div>
                       <Input
@@ -342,10 +411,18 @@ export default function Families() {
                         <Input
                           placeholder="Full Name"
                           value={newFamilyData.mere.name}
-                          onChange={(e) => setNewFamilyData({
-                            ...newFamilyData,
-                            mere: { ...newFamilyData.mere, name: e.target.value }
-                          })}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const match = allMembersList.find(m => m.name.toLowerCase() === val.toLowerCase());
+                            setNewFamilyData({
+                              ...newFamilyData,
+                              mere: {
+                                name: val,
+                                email: match && !newFamilyData.mere.email ? match.email : newFamilyData.mere.email,
+                                phone: match && !newFamilyData.mere.phone ? match.phone : newFamilyData.mere.phone
+                              }
+                            });
+                          }}
                         />
                       </div>
                       <Input
@@ -419,7 +496,7 @@ export default function Families() {
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                        <Button variant="ghost" size="icon" className="text-gray-400 hover:bg-gray-100">
+                        <Button variant="ghost" size="icon" className="text-muted-foreground hover:bg-muted">
                           <MoreVertical className="w-4 h-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -427,6 +504,13 @@ export default function Families() {
                         <DropdownMenuItem onClick={() => setSelectedFamily(family)}>
                           <Users className="w-4 h-4 mr-2 text-muted-foreground" />
                           <span>View Details</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                          setSelectedFamily(family);
+                          setIsEditFamilyOpen(true);
+                        }}>
+                          <Plus className="w-4 h-4 mr-2 text-muted-foreground rotate-45" />
+                          <span>Edit Details</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
@@ -481,6 +565,86 @@ export default function Families() {
             );
           })}
         </div>
+
+        {/* Edit Family Dialog */}
+        <Dialog open={isEditFamilyOpen} onOpenChange={setIsEditFamilyOpen}>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle>Edit Family Details</DialogTitle>
+            </DialogHeader>
+            {selectedFamily && (
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2 col-span-2">
+                    <Label>Family Name</Label>
+                    <Input
+                      value={selectedFamily.name}
+                      onChange={(e) => setSelectedFamily({ ...selectedFamily, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2 col-span-2">
+                    <Label>Generation</Label>
+                    <Input
+                      value={selectedFamily.generation}
+                      onChange={(e) => setSelectedFamily({ ...selectedFamily, generation: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Total Members</Label>
+                    <Input
+                      type="number"
+                      value={selectedFamily.total_members || ""}
+                      onChange={(e) => handleFamilyNumberChange('total_members', e.target.value, true)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Total Boys</Label>
+                    <Input
+                      type="number"
+                      value={selectedFamily.total_boys || ""}
+                      onChange={(e) => handleFamilyNumberChange('total_boys', e.target.value, true)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Total Girls</Label>
+                    <Input
+                      type="number"
+                      value={selectedFamily.total_girls || ""}
+                      onChange={(e) => handleFamilyNumberChange('total_girls', e.target.value, true)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 col-span-2">
+                    <div className="space-y-2">
+                      <Label>Y1</Label>
+                      <Input
+                        type="number"
+                        value={selectedFamily.total_y1 || ""}
+                        onChange={(e) => handleFamilyNumberChange('total_y1', e.target.value, true)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Y2</Label>
+                      <Input
+                        type="number"
+                        value={selectedFamily.total_y2 || ""}
+                        onChange={(e) => handleFamilyNumberChange('total_y2', e.target.value, true)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Y3</Label>
+                      <Input
+                        type="number"
+                        value={selectedFamily.total_y3 || ""}
+                        onChange={(e) => handleFamilyNumberChange('total_y3', e.target.value, true)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <Button onClick={handleUpdateFamily} className="w-full">Save Changes</Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
